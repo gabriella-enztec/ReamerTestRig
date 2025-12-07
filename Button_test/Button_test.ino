@@ -82,14 +82,22 @@ void loop() {
 
   if(Serial.available()){
     char input_char = (char)Serial.read();
-    switch(input_char)
-    if (input_char == "0") {
+    input += input_char;
+    if (input_char == '0') {
       input_complete = true;
-      reamCycle();
     }
     if(input.length() > INPUT_BUFFER_LEN) {
       input = "";
     }
+  }
+  
+  if (input_complete) {
+    if (input == "0") {
+      stepper.setCurrentPosition(0);
+      reamCycle();
+    }
+    input = "";
+    input_complete = false;
   }
 
   for (int i = 0; i < numberOfButtons; i++) {

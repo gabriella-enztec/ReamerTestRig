@@ -45,7 +45,6 @@ bool downPressed = false;
 unsigned long lastPress = 0;
 const unsigned long debounceDelay = 50;
 
-
 // Defining mechanical and timing constants
 const float Lead = 8.0; // Lead of the screw (distance per revolution)
 const int StepsPerRev = 1600; // Steps needed for one full turn
@@ -57,9 +56,10 @@ long returnSpeedSteps = StepsPer_mm * PositionSpeed;
 
 int startingGap = -2; // 2mm
 
+bool busy = false;
+
 
 void setup() {
-
 
   for (int i = 0; i < numberOfButtons; i++)
   {
@@ -74,31 +74,30 @@ void setup() {
   //init serial terminal and reserve chars in input buffer.
   Serial.begin(9600, SERIAL_8N1);
   input.reserve(INPUT_BUFFER_LEN);
-
 }
 
 
 void loop() {
 
-  if(Serial.available()){
+if (!busy && Serial.available()) {
     char input_char = (char)Serial.read();
-    input += input_char;
+
     if (input_char == '0') {
-      input_complete = true;
+      busy = true;       // Arduino is now busy
+      reamCycle();       // execute command
+      busy = false;      // done
     }
-    if(input.length() > INPUT_BUFFER_LEN) {
-      input = "";
-    }
-  }
-  
-  if (input_complete) {
-    if (input == "0") {
+    else if (input_char == '1') {
+      busy = true;       // Arduino is busy during stepper reset
       stepper.setCurrentPosition(0);
-      reamCycle();
+      busy = false;      // done
     }
-    input = "";
-    input_complete = false;
+  } 
+  else if (busy) {
+    // optional: discard any characters that arrive while busy
+    while (Serial.available()) Serial.read();
   }
+
 
   for (int i = 0; i < numberOfButtons; i++) {
     btn[i].update();

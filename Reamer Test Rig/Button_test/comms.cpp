@@ -20,6 +20,7 @@ void serial_init()
 }
 
 
+// Checks for commands sent by DEWESoft
 void checkSerialCommand()
 {
   if (Serial.available()) {
@@ -27,17 +28,17 @@ void checkSerialCommand()
     // Debounce serial commands
     if (millis() - lastCommandTime > debounceDelay) {
       switch (input_char) {
-        case '0':
+        case '0': // REAM COMMAND
           reamCycle();
           lastCommandTime = millis();
           break;
           
-        case '1':
+        case '1': // ZERO COMMAND
           zero();
           lastCommandTime = millis();
           break;
           
-        case '2':
+        case '2': // DRILL COMMAND
           drillCycle();
           lastCommandTime = millis();
           break;

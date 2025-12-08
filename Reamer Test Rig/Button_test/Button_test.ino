@@ -4,7 +4,7 @@
 #include "ream.h"
 #include "comms.h"
 
-
+// Initialisation function
 void setup() 
 {
   buttons_init();
@@ -12,8 +12,9 @@ void setup()
   serial_init();
 }
 
+
 void loop() 
 {
-  checkSerialCommand();
-  checkButtons();
+  checkSerialCommand(); // Checks Commands Sent from DEWESoft
+  checkButtons(); // Checks Physical Buttons
 }

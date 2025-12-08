@@ -22,6 +22,8 @@ void buttons_init()
   }
 }
 
+
+// Checks physical buttons state
 void checkButtons()
 {
   // Update all button states

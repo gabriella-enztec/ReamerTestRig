@@ -43,6 +43,14 @@ void checkSerialCommand()
           lastCommandTime = millis();
           break;
 
+        case '3': // UP COMMAND
+          manualPositioning(true, false);
+          break;
+
+        case '4': // DOWN COMMAND
+          manualPositioning(false, true);
+          break;
+
         default:
           break;
       }

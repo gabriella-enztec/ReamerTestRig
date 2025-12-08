@@ -1,0 +1,50 @@
+
+#include "comms.h"
+#include "ream.h"
+#include "stepper_movement.h"
+
+// Serial communication settings
+#define INPUT_BUFFER_LEN 64
+String input;
+
+// Serial command timing
+unsigned long lastCommandTime = 0;
+const unsigned long debounceDelay = 50;
+
+
+void serial_init()
+{
+    // Initialize serial communication
+  Serial.begin(9600, SERIAL_8N1);
+  input.reserve(INPUT_BUFFER_LEN);
+}
+
+
+void checkSerialCommand()
+{
+  if (Serial.available()) {
+    char input_char = (char)Serial.read();
+    // Debounce serial commands
+    if (millis() - lastCommandTime > debounceDelay) {
+      switch (input_char) {
+        case '0':
+          reamCycle();
+          lastCommandTime = millis();
+          break;
+          
+        case '1':
+          zero();
+          lastCommandTime = millis();
+          break;
+          
+        case '2':
+          drillCycle();
+          lastCommandTime = millis();
+          break;
+
+        default:
+          break;
+      }
+    }
+  }
+}

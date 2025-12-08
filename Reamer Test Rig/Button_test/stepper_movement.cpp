@@ -28,6 +28,7 @@ void move(int target_position, float speed)
 {
   stepper.moveTo(target_position * STEPS_PER_MM);
 
+  // Checks if target position is above current position
   if(stepper.currentPosition() < target_position * STEPS_PER_MM)
   {
     stepper.setSpeed(speed * STEPS_PER_MM);
@@ -35,7 +36,7 @@ void move(int target_position, float speed)
       stepper.runSpeed();
     }
   }
-  else
+  else   // Checks if target position is above below position
   {
     stepper.setSpeed(-speed *STEPS_PER_MM);
     while (stepper.currentPosition() > target_position * STEPS_PER_MM) {

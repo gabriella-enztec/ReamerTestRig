@@ -6,6 +6,7 @@
 #include <Bounce2.h>
 
 #include "comms.h"
+#include "stepper_movement.h"
 
 // Defining pin positions
 #define DirPin 12       // Pin sets direction of rotation
@@ -30,14 +31,9 @@ float Feedrate = 0.5;     // Gantry feedrate in [mm/s]
 int drillingdepth = 70;
 float drillFeedrate = 2;
 
-int ReamState;   // Stores state of reaming switch currently
-int PrevReamState;   // Stores previous state of reaming switch
 int RapidSpeed = 5; // Speed for rapid positioning movement [mm/s]
 int PositionSpeed = 2;  // Speed for accurate positioning movement [mm/s]
 int ManualSpeed = RapidSpeed; // Sets manual speed to rapid mode initially
-int Clearance = 150;  // Distance to move up after reaming [mm]
-int shimThickness = 12; // [mm]
-char lastcmd = 'x';
 
 bool upPressed = false;
 bool downPressed = false;
@@ -57,6 +53,9 @@ long returnSpeedSteps = StepsPer_mm * PositionSpeed;
 int startingGap = -2; // 2mm
 
 bool busy = false;
+
+long lastcommandtime = 0;
+long delaytime = 50;
 
 
 void setup() {
@@ -79,24 +78,26 @@ void setup() {
 
 void loop() {
 
-if (!busy && Serial.available()) {
+  if (Serial.available()) {
     char input_char = (char)Serial.read();
-
-    if (input_char == '0') {
-      busy = true;       // Arduino is now busy
-      reamCycle();       // execute command
-      busy = false;      // done
-    }
-    else if (input_char == '1') {
-      busy = true;       // Arduino is busy during stepper reset
-      stepper.setCurrentPosition(0);
-      busy = false;      // done
+    if (millis() - lastcommandtime > delaytime)
+    {
+      if (input_char == '0') 
+      {
+        reamCycle();       // execute command
+        busy = true;
+      }
+      else if (input_char == '1') {
+        stepper.setCurrentPosition(0);
+        busy = true;
+      }
+      if(busy)
+      {
+        lastcommandtime = millis();
+        busy = false;
+      }
     }
   } 
-  else if (busy) {
-    // optional: discard any characters that arrive while busy
-    while (Serial.available()) Serial.read();
-  }
 
 
   for (int i = 0; i < numberOfButtons; i++) {
@@ -131,33 +132,10 @@ if (!busy && Serial.available()) {
     reamCycle();
   }
 
-  verticalMovement(upPressed, downPressed);
-
-      stepper.setCurrentPosition(0);
-
+  manualPositioning(upPressed, downPressed);
 }
 
 
-void verticalMovement(bool upP, bool downP)
-{
-  if(!(upP && downP))
-  {
-    if(upP)
-    {
-      stepper.setSpeed(-ManualSpeed*StepsPer_mm);    // negative speed = opposite direction
-      stepper.runSpeed();
-    }
-    else if (downP)
-    {
-      stepper.setSpeed(ManualSpeed*StepsPer_mm);    // negative speed = opposite direction
-      stepper.runSpeed();
-    }
-  }
-  else
-  {
-    stepper.setSpeed(0);
-  }
-}
 
 
 void toReamStartingPosition()
@@ -211,14 +189,14 @@ void drillCycle() {
   
   // Move to 1mm above block surface (rapid positioning - can use runToPosition)
   stepper.setSpeed(PositionSpeed * StepsPer_mm);
-  stepper.moveTo((shimThickness + 1) * StepsPer_mm);
+  stepper.moveTo(0);
   stepper.runToPosition();
   
   delay(1000);
   
-  stepper.moveTo((shimThickness + 1 + drillingdepth) * StepsPer_mm);
+  stepper.moveTo(drillingdepth * StepsPer_mm);
   stepper.setSpeed(StepperSpeed);  
-  while (stepper.currentPosition() <= (shimThickness + 1 + drillingdepth) * StepsPer_mm) {
+  while (stepper.currentPosition() <= drillingdepth * StepsPer_mm) {
     stepper.runSpeed();
   }
 

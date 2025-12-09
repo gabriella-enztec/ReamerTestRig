@@ -4,6 +4,7 @@
 #include "ream.h"
 #include "stepper_movement.h"
 #include "state_machine.h" 
+#include "settings.h"
 
 // Serial communication settings
 #define INPUT_BUFFER_LEN 64
@@ -15,28 +16,29 @@ unsigned long lastCommandTime = 0;
 const unsigned long debounceDelay = 50;
 
 // Prefix Tx (Transmitting)
-const String currentPosistionPrefix = "\$p"; 
-const String startStoringPrefix = "\$s";
-const String rpmPrefix = "\$r";
-const String feedRatePrefix = "\$f";
-const String depthOfCutPrefix = "\$d";
+const char currentPosistionPrefix[] = "\$p";
+const char startStoringPrefix[]    = "\$s";
+const char rpmPrefix[]             = "\$r";
+const char feedRatePrefix[]        = "\$f";
+const char depthOfCutPrefix[]      = "\$d";
 
-// Prefix Rx (Reciving)
-const String startReamingPrefix = "\$re";
-const String zeroPrefix = "\$z";
-const String manualUpPrefix = "\$up";
-const String manualDownPrefix = "\$down";
-const String deafultReamingSettingPrefix = "\$dr";
-const String deafultDrillingSettingPrefix = "\$dd";
-const String increaseRPMPrefix = "\$ri";
-const String decreaseRPMPrefix = "\$rd";
-const String increaseFeedRatePrefix = "\$fri";
-const String decreaseFeedRatePrefix = "\$frd";
-const String increaseDepthOfCutPrefix = "\$dci";
-const String decreaseDepthOfCut Prefix = "\$dcd";
+// Prefix Rx (Receiving)
+const char startReamingPrefix[]           = "\$re";
+const char zeroPrefix[]                   = "\$z";
+const char manualUpPrefix[]               = "\$up";
+const char manualDownPrefix[]             = "\$mown";
+const char deafultReamingSettingPrefix[]  = "\$dreaming";
+const char deafultDrillingSettingPrefix[] = "\$drilling";
+const char increaseRPMPrefix[]            = "\$ri";
+const char decreaseRPMPrefix[]            = "\$rd";
+const char increaseFeedRatePrefix[]       = "\$fri";
+const char decreaseFeedRatePrefix[]       = "\$frd";
+const char increaseDepthOfCutPrefix[]     = "\$dci";
+const char decreaseDepthOfCutPrefix[]     = "\$dcd";
 
-// Postfix both Tx and Rx
-const String postfix = "\LF";
+// Postfix
+const char postfix[] = "\\n";
+
 
 
 void serial_init()
@@ -46,49 +48,77 @@ void serial_init()
   input.reserve(INPUT_BUFFER_LEN);
 }
 
+// Buffer for incoming serial command
+char serialBuffer[20];
+uint8_t bufferIndex = 0;
 
-// Checks for commands sent by DEWESoft
 void checkSerialCommand()
 {
-  if (Serial.available()) 
-  {
-    char input_char = (char)Serial.read();
-    // Debounce serial commands
-    if (millis() - lastCommandTime > debounceDelay) 
+    while (Serial.available())
     {
-      switch (input_char) {
-        case '0': // REAM COMMAND
-          reamCycle();
-          lastCommandTime = millis();
-          break;
-          
-        case '1': // ZERO COMMAND
-          zero();
-          lastCommandTime = millis();
-          break;
-          
-        case '2': // DRILL COMMAND
-          drillCycle();
-          lastCommandTime = millis();
-          break;
+        char c = Serial.read();
 
-        case '3': // UP COMMAND
-          manualPositioning(true, false);
-          break;
+        // End of command (postfix = "\n")
+        if (c == '\n')
+        {
+            serialBuffer[bufferIndex] = '\0';  // Null-terminate
 
-        case '4': // DOWN COMMAND
-          manualPositioning(false, true);
-          break;
+            // Debounce
+            if (millis() - lastCommandTime > debounceDelay)
+            {
+                // Compare full commands
+                if (strcmp(serialBuffer, startReamingPrefix) == 0) {      // "$re"
+                    reamCycle();
+                }
+                else if (strcmp(serialBuffer, zeroPrefix) == 0) {         // "$z"
+                    zero();
+                }
+                else if (strcmp(serialBuffer, deafultDrillingSettingPrefix) == 0) { // "$dd"
+                    drillCycle();
+                }
+                else if (strcmp(serialBuffer, increaseRPMPrefix) == 0) {  // "$ri"
+                    increaseRPM();
+                }
+                else if (strcmp(serialBuffer, decreaseRPMPrefix) == 0) {  // "$rd"
+                    decreaseRPM();
+                }
+                else if (strcmp(serialBuffer, increaseFeedRatePrefix) == 0) { // "$fri"
+                    increaseFeedRate();
+                }
+                else if (strcmp(serialBuffer, decreaseFeedRatePrefix) == 0) { // "$frd"
+                    decreaseFeedRate();
+                }
+                else if (strcmp(serialBuffer, increaseDepthOfCutPrefix) == 0) { // "$dci"
+                    increaseDepthOfCut();
+                }
+                else if (strcmp(serialBuffer, decreaseDepthOfCutPrefix) == 0) { // "$dcd"
+                    decreaseDepthOfCut();
+                }
+                lastCommandTime = millis();
+            }
+            else if (strcmp(serialBuffer, manualUpPrefix) == 0) {     // "$up"
+                manualPositioning(true, false);
+            }
+            else if (strcmp(serialBuffer, manualDownPrefix) == 0) {   // "$down"
+                manualPositioning(false, true);
+            }
 
-        default:
-          break;
-      }
+            // Reset buffer for next message
+            bufferIndex = 0;
+        }
+        else
+        {
+            if (bufferIndex < sizeof(serialBuffer) - 1)
+            {
+                serialBuffer[bufferIndex++] = c;
+            }
+        }
     }
-  }
 }
 
 
-void sendSerialMeasure()
+
+void sendAllSerial()
 {
   if (getRigState() == REAMING)
   {
@@ -99,10 +129,50 @@ void sendSerialMeasure()
     serialMeasure = -1;
   }
 
-  Serial.print("\$t");       // Prefix
-  Serial.print(serialMeasure);   // send millis as readable text
-  Serial.print("\\n");       // stop string
+  sendSerialMessage(startStoringPrefix, serialMeasure);
+  sendSerialMessage(currentPosistionPrefix, getStepperPosition());
+  sendSerialMessage(rpmPrefix, getRPM());
+  sendSerialMessage(feedRatePrefix, getFeedRate());
+  sendSerialMessage(depthOfCutPrefix, getDepthOfCut());
+
 }
+
+
+void sendSerialMessage(const char* prefix, unsigned long value)
+{
+  Serial.print(prefix);
+  Serial.print(value);   
+  Serial.print(postfix);
+  Serial.println();
+}
+
+
+void sendSerialMessage(const char* prefix, int value)
+{
+  Serial.print(prefix);
+  Serial.print(value);   
+  Serial.print(postfix);
+  Serial.println();
+}
+
+
+void sendSerialMessage(const char* prefix, float value)
+{
+  Serial.print(prefix);
+  Serial.print(value);   
+  Serial.print(postfix);
+  Serial.println();
+}
+
+void sendSerialMessage(const char* prefix, long int value)
+{
+  Serial.print(prefix);
+  Serial.print(value);   
+  Serial.print(postfix);
+  Serial.println();
+}
+
+
 
 
 

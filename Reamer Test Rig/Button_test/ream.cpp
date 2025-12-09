@@ -24,14 +24,14 @@ void reamCycle()
 
   // Reaming cut
   setReaming();
-  sendSerialMeasure();
+  sendAllSerial();
   move(REAMINGDEPTH, REAMINGFEEDRATE);
 
 
   //Extraction
   setRetracting();
   move(STARTINGCLEARANCE, RAPIDSPEED);
-  sendSerialMeasure();
+  sendAllSerial();
 }
 
 // Drilling Instructions

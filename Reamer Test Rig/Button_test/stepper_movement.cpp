@@ -67,3 +67,8 @@ void manualPositioning(bool upP, bool downP)
     stepper.setSpeed(0);
   }
 }
+
+long getStepperPosition()
+{
+  return stepper.currentPosition();
+}

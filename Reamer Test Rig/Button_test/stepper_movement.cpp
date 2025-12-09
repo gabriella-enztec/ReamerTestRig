@@ -45,7 +45,7 @@ void move(int target_position, float speed)
   }
 }
 
-c
+
 // Directional Manual Movement
 void manualPositioning(bool upP, bool downP)
 {

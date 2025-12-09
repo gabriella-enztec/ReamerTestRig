@@ -14,6 +14,30 @@ int serialMeasure = 0;
 unsigned long lastCommandTime = 0;
 const unsigned long debounceDelay = 50;
 
+// Prefix Tx (Transmitting)
+const String currentPosistionPrefix = "\$p"; 
+const String startStoringPrefix = "\$s";
+const String rpmPrefix = "\$r";
+const String feedRatePrefix = "\$f";
+const String depthOfCutPrefix = "\$d";
+
+// Prefix Rx (Reciving)
+const String startReamingPrefix = "\$re";
+const String zeroPrefix = "\$z";
+const String manualUpPrefix = "\$up";
+const String manualDownPrefix = "\$down";
+const String deafultReamingSettingPrefix = "\$dr";
+const String deafultDrillingSettingPrefix = "\$dd";
+const String increaseRPMPrefix = "\$ri";
+const String decreaseRPMPrefix = "\$rd";
+const String increaseFeedRatePrefix = "\$fri";
+const String decreaseFeedRatePrefix = "\$frd";
+const String increaseDepthOfCutPrefix = "\$dci";
+const String decreaseDepthOfCut Prefix = "\$dcd";
+
+// Postfix both Tx and Rx
+const String postfix = "\LF";
+
 
 void serial_init()
 {

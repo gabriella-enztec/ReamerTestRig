@@ -23,10 +23,12 @@ void serial_init()
 // Checks for commands sent by DEWESoft
 void checkSerialCommand()
 {
-  if (Serial.available()) {
+  if (Serial.available()) 
+  {
     char input_char = (char)Serial.read();
     // Debounce serial commands
-    if (millis() - lastCommandTime > debounceDelay) {
+    if (millis() - lastCommandTime > debounceDelay) 
+    {
       switch (input_char) {
         case '0': // REAM COMMAND
           reamCycle();
@@ -57,3 +59,12 @@ void checkSerialCommand()
     }
   }
 }
+
+
+void sendMessage()
+{
+  Serial.print("\$t");       // Prefix
+  Serial.print(millis());   // send millis as readable text
+  Serial.print("\\n");       // stop string
+}
+

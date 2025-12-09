@@ -3,5 +3,6 @@
 
 void checkSerialCommand();
 void serial_init();
+void sendMessage();
 
 #endif

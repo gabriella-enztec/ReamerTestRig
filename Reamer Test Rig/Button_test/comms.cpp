@@ -1,11 +1,14 @@
 
 #include "comms.h"
+#include "buttons.h"
 #include "ream.h"
 #include "stepper_movement.h"
+#include "state_machine.h" 
 
 // Serial communication settings
 #define INPUT_BUFFER_LEN 64
 String input;
+int serialMeasure = 0;
 
 // Serial command timing
 unsigned long lastCommandTime = 0;
@@ -61,10 +64,21 @@ void checkSerialCommand()
 }
 
 
-void sendMessage()
+void sendSerialMeasure()
 {
+  if (getRigState() == REAMING)
+  {
+    serialMeasure = 1;
+  }
+  else
+  {
+    serialMeasure = -1;
+  }
+
   Serial.print("\$t");       // Prefix
-  Serial.print(millis());   // send millis as readable text
+  Serial.print(serialMeasure);   // send millis as readable text
   Serial.print("\\n");       // stop string
 }
+
+
 

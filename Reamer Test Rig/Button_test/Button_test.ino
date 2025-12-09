@@ -3,6 +3,7 @@
 #include "stepper_movement.h"
 #include "comms.h"
 #include "ream.h"
+#include "state_machine.h"
 
 #define SENDMESSAGE_PERIOD 25 //ms
 
@@ -14,6 +15,7 @@ void setup()
   buttons_init();
   stepper_movement_init();
   serial_init();
+  state_machine_init();
 }
 
 
@@ -22,9 +24,4 @@ void loop()
   checkSerialCommand(); // Checks Commands Sent from DEWESoft
   checkButtons(); // Checks Physical Buttons
 
-  if(SENDMESSAGE_PERIOD <= millis() - sendmessage_previous_time)
-  {
-    sendMessage();
-    sendmessage_previous_time = millis();
-  }
 }

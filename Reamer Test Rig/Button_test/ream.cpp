@@ -1,5 +1,7 @@
 
 #include "stepper_movement.h"
+#include "state_machine.h"
+#include "comms.h"
 
 // Reaming Cutting Settings
 #define REAMINGDEPTH 4 // mm
@@ -17,27 +19,33 @@
 void reamCycle()
 {
   // Move to 2mm above block
-  Serial.println("Going to starting positon");
-  move(STARTINGCLEARANCE, RAPIDSPEED);
+  setPositioning();
+  //move(STARTINGCLEARANCE, RAPIDSPEED);
 
   // Reaming cut
-  Serial.println("Reaming");
+  setReaming();
+  sendSerialMeasure();
   move(REAMINGDEPTH, REAMINGFEEDRATE);
 
+
   //Extraction
-  Serial.println("Extracting");
+  setRetracting();
   move(STARTINGCLEARANCE, RAPIDSPEED);
+  sendSerialMeasure();
 }
 
 // Drilling Instructions
 void drillCycle()
 {
-  // Move to 2mm above block
+  // Move to 2mm above block'
+  setPositioning();
   move(STARTINGCLEARANCE, RAPIDSPEED);
 
   // Reaming cut
+  setReaming();
   move(DRILLINGDEPTH, DRILLINGFEEDRATE);
 
   //Extraction
+  setRetracting();
   move(STARTINGCLEARANCE, RAPIDSPEED);
 }

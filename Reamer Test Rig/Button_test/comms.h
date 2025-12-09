@@ -3,6 +3,6 @@
 
 void checkSerialCommand();
 void serial_init();
-void sendMessage();
+void sendSerialMeasure();
 
 #endif

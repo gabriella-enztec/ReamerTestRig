@@ -4,8 +4,8 @@
 #include "stepper_movement.h"
 
 // Button configuration - now defined here (not in header)
-const int btnPins[] = {DOWN_BUTTON, UP_BUTTON, ZERO_BUTTON, REAM_BUTTON};
-const int numberOfButtons = 4;
+const int btnPins[] = {DOWN_BUTTON, UP_BUTTON, ZERO_BUTTON, REAM_BUTTON, TEST_BUTTON};
+const int numberOfButtons = 5;
 Bounce btn[numberOfButtons];
 
 // Button state tracking
@@ -53,13 +53,12 @@ void checkButtons()
 
   if(btn[BTN_ZERO].fell()) // ZERO
   {
-    Serial.println("Zero");
     zero();
   }
 
   if(btn[BTN_REAM].fell()) // REAM
   {
-    Serial.println("Reaming");
     reamCycle();
   }
+
 }

@@ -23,18 +23,18 @@ const String feedRatePrefix        = "\$f";
 const String depthOfCutPrefix      = "\$d";
 
 // Prefix Rx (Receiving)
-const char startReamingPrefix[]           = "\$re";
-const char zeroPrefix[]                   = "\$z";
-const char manualUpPrefix[]               = "\$up";
-const char manualDownPrefix[]             = "\$mown";
-const char deafultReamingSettingPrefix[]  = "\$dreaming";
-const char deafultDrillingSettingPrefix[] = "\$drilling";
-const char increaseRPMPrefix[]            = "\$ri";
-const char decreaseRPMPrefix[]            = "\$rd";
-const char increaseFeedRatePrefix[]       = "\$fri";
-const char decreaseFeedRatePrefix[]       = "\$frd";
-const char increaseDepthOfCutPrefix[]     = "\$dci";
-const char decreaseDepthOfCutPrefix[]     = "\$dcd";
+const char startReamingPrefix           = 'a';
+const char zeroPrefix                   = 'b';
+const char manualUpPrefix               = 'c';
+const char manualDownPrefix             = 'd';
+const char deafultReamingSettingPrefix  = 'e';
+const char deafultDrillingSettingPrefix = 'f';
+const char increaseRPMPrefix            = 'g';
+const char decreaseRPMPrefix            = 'h';
+const char increaseFeedRatePrefix       = 'i';
+const char decreaseFeedRatePrefix       = 'j';
+const char increaseDepthOfCutPrefix     = 'k';
+const char decreaseDepthOfCutPrefix     = 'l';
 
 // Postfix
 const String postfix = "\\n";
@@ -59,60 +59,52 @@ void checkSerialCommand()
     {
         char c = Serial.read();
 
-        // End of command (postfix = "\n")
-        if (c == '\n')
+        // Debounce
+        if (millis() - lastCommandTime > debounceDelay)
         {
-            serialBuffer[bufferIndex] = '\0';  // Null-terminate
-
-            // Debounce
-            if (millis() - lastCommandTime > debounceDelay)
+            switch (c)
             {
-                // Compare full commands
-                if (strcmp(serialBuffer, startReamingPrefix) == 0) {      // "$re"
+                case startReamingPrefix:
                     reamCycle();
-                }
-                else if (strcmp(serialBuffer, zeroPrefix) == 0) {         // "$z"
+                    break;
+                case zeroPrefix:
                     zero();
-                }
-                else if (strcmp(serialBuffer, deafultDrillingSettingPrefix) == 0) { // "$dd"
-                    drillCycle();
-                }
-                else if (strcmp(serialBuffer, increaseRPMPrefix) == 0) {  // "$ri"
+                    break;
+                case deafultReamingSettingPrefix:
+                    loadDefaultReamingSettings();
+                    break;
+                case deafultDrillingSettingPrefix:
+                    loadDefaultDrillingSettings();
+                    break;
+                case increaseRPMPrefix:
                     increaseRPM();
-                }
-                else if (strcmp(serialBuffer, decreaseRPMPrefix) == 0) {  // "$rd"
+                    break;
+                case decreaseRPMPrefix:
                     decreaseRPM();
-                }
-                else if (strcmp(serialBuffer, increaseFeedRatePrefix) == 0) { // "$fri"
+                    break;
+                case increaseFeedRatePrefix:
                     increaseFeedRate();
-                }
-                else if (strcmp(serialBuffer, decreaseFeedRatePrefix) == 0) { // "$frd"
+                    break;
+                case decreaseFeedRatePrefix:
                     decreaseFeedRate();
-                }
-                else if (strcmp(serialBuffer, increaseDepthOfCutPrefix) == 0) { // "$dci"
+                    break;
+                case increaseDepthOfCutPrefix:
                     increaseDepthOfCut();
-                }
-                else if (strcmp(serialBuffer, decreaseDepthOfCutPrefix) == 0) { // "$dcd"
+                    break;
+                case decreaseDepthOfCutPrefix:
                     decreaseDepthOfCut();
-                }
-                lastCommandTime = millis();
+                    break;
+                default:
+                    break;
             }
-            else if (strcmp(serialBuffer, manualUpPrefix) == 0) {     // "$up"
-                manualPositioning(true, false);
-            }
-            else if (strcmp(serialBuffer, manualDownPrefix) == 0) {   // "$down"
-                manualPositioning(false, true);
-            }
-
-            // Reset buffer for next message
-            bufferIndex = 0;
+            lastCommandTime = millis();
         }
-        else
-        {
-            if (bufferIndex < sizeof(serialBuffer) - 1)
-            {
-                serialBuffer[bufferIndex++] = c;
-            }
+
+        else if (c == manualUpPrefix) {     // "$up"
+            manualPositioning(true, false);
+        }
+        else if (c == manualDownPrefix) {   // "$down"
+            manualPositioning(false, true);
         }
     }
 }
@@ -136,6 +128,7 @@ void sendAllSerial()
   sendSerialMessage(depthOfCutPrefix, getDepthOfCut());
   
 }
+
 
 void sendSerialMessage(String prefix, unsigned long value)
 {

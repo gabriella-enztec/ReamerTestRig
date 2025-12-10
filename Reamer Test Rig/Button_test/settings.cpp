@@ -2,12 +2,12 @@
 #include "settings.h"
 
 // ----------- CONFIGURABLE LIMITS -----------
-const int RPM_MIN = 100;
-const int RPM_MAX = 3000;
-const float FEED_MIN = 10;
-const float FEED_MAX = 200;
-const float DOC_MIN = 1;
-const float DOC_MAX = 10;
+const int RPM_MIN = 0;
+const int RPM_MAX = 1000;
+const float FEED_MIN = 0;
+const float FEED_MAX = 100;
+const float DOC_MIN = 0;
+const float DOC_MAX = 100;
 
 // ----------- DEAFULT REAMING SETTINGS -----------
 const int RPM_REAMING_DEAFULT = 270;
@@ -43,23 +43,23 @@ void decreaseRPM() {
 // ========== FEED RATE ==========
 void increaseFeedRate() {
     if (FEED < FEED_MAX)
-        FEED += 5;
+        FEED += 0.1;
 }
 
 void decreaseFeedRate() {
     if (FEED > FEED_MIN)
-        FEED -= 5;
+        FEED -= 0.1;
 }
 
 // ========== DEPTH OF CUT ==========
 void increaseDepthOfCut() {
     if (DOC < DOC_MAX)
-        DOC += 1;
+        DOC += 0.2;
 }
 
 void decreaseDepthOfCut() {
     if (DOC > DOC_MIN)
-        DOC -= 1;
+        DOC -= 0.2;
 }
 
 // ========== DEFAULT PRESETS ==========

@@ -4,7 +4,7 @@
 
 #include <AccelStepper.h>
 
-void move(int target_position, float speed);
+void move(float target_position, float speed);
 void manualPositioning(bool upP, bool downP);
 void stepper_movement_init();
 void zero();

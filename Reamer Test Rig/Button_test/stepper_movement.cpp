@@ -5,7 +5,8 @@
 // Stepper Motor Pins
 #define DirPin 12       // Pin sets direction of rotation
 #define StepPin 10      // Pin activates motion
-#define STEPS_PER_MM 200 // steps
+
+const float STEPS_PER_MM = 200.0f;
 
 AccelStepper stepper(AccelStepper::DRIVER, StepPin, DirPin);
 
@@ -25,7 +26,7 @@ void zero()
 
 
 // Positional Movement 
-void move(int target_position, float speed)
+void move(float target_position, float speed)
 {
   stepper.moveTo(target_position * STEPS_PER_MM);
 

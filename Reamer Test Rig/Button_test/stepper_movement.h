@@ -9,6 +9,7 @@ void manualPositioning(bool upP, bool downP);
 void stepper_movement_init();
 void zero();
 long getStepperPosition();
+long getStepperPositionmm();
 
 // Movement Speed Settings
 #define RAPIDSPEED 5 // mm/s

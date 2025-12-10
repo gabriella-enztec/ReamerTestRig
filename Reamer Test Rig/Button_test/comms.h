@@ -6,6 +6,7 @@
 void checkSerialCommand();
 void serial_init();
 void sendAllSerial();
+void sendPosistion();
 
 
 void sendSerialMessage(String prefix, unsigned long value);

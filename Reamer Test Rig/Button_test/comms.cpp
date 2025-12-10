@@ -11,6 +11,9 @@
 String input;
 int serialMeasure = 0;
 
+const int timepositionpast = 50;
+int sincelastposition = 0;
+
 // Serial command timing
 unsigned long lastCommandTime = 0;
 const unsigned long debounceDelay = 50;
@@ -122,11 +125,20 @@ void sendAllSerial()
   }
 
   sendSerialMessage(startStoringPrefix, serialMeasure);
-  sendSerialMessage(currentPosistionPrefix, getStepperPosition());
+  sendSerialMessage(currentPosistionPrefix, getStepperPositionmm());
   sendSerialMessage(rpmPrefix, getRPM());
   sendSerialMessage(feedRatePrefix, getFeedRate());
   sendSerialMessage(depthOfCutPrefix, getDepthOfCut());
   
+}
+
+void sendPosistion()
+{
+    if (millis() - sincelastposition >= timepositionpast)
+    {
+        sendSerialMessage(currentPosistionPrefix, getStepperPositionmm());
+        sincelastposition = millis();
+    }
 }
 
 

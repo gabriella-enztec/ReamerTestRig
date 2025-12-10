@@ -1,5 +1,6 @@
 
 #include "stepper_movement.h"
+#include "comms.h"
 
 // Stepper Motor Pins
 #define DirPin 12       // Pin sets direction of rotation
@@ -34,6 +35,7 @@ void move(int target_position, float speed)
     stepper.setSpeed(speed * STEPS_PER_MM);
     while (stepper.currentPosition() < target_position * STEPS_PER_MM) {
       stepper.runSpeed();
+      sendPosistion();
     }
   }
   else   // Checks if target position is above below position
@@ -41,6 +43,7 @@ void move(int target_position, float speed)
     stepper.setSpeed(-speed *STEPS_PER_MM);
     while (stepper.currentPosition() > target_position * STEPS_PER_MM) {
       stepper.runSpeed();
+      sendPosistion();
     }
   }
 }
@@ -55,11 +58,13 @@ void manualPositioning(bool upP, bool downP)
     {
       stepper.setSpeed(-RAPIDSPEED*STEPS_PER_MM);    // negative speed = opposite direction
       stepper.runSpeed();
+      sendPosistion();
     }
     else if (downP)
     {
       stepper.setSpeed(RAPIDSPEED*STEPS_PER_MM);    // negative speed = opposite direction
       stepper.runSpeed();
+      sendPosistion();
     }
   }
   else
@@ -71,4 +76,9 @@ void manualPositioning(bool upP, bool downP)
 long getStepperPosition()
 {
   return stepper.currentPosition();
+}
+
+long getStepperPositionmm()
+{
+    return stepper.currentPosition()/STEPS_PER_MM;
 }

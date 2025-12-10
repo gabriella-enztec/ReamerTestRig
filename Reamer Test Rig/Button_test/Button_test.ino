@@ -6,7 +6,7 @@
 #include "state_machine.h"
 #include "settings.h"
 
-#define SENDMESSAGE_PERIOD 50 // ms
+#define SENDMESSAGE_PERIOD 200 // ms
 #define CHECKSERIAL_PERIOD 50 // ms
 #define CHECKPHYSICALBUTTON_PERIOD 100 // ms
 
@@ -45,7 +45,7 @@ void loop()
 
   if (currenttime - checkphysicalbutton_previous_time >= CHECKPHYSICALBUTTON_PERIOD)
   {
-    checkButtons(); // Checks Physical Buttons
+    // checkButtons(); // Checks Physical Buttons
     checkphysicalbutton_previous_time = currenttime;
   }
 

@@ -16,11 +16,11 @@ unsigned long lastCommandTime = 0;
 const unsigned long debounceDelay = 50;
 
 // Prefix Tx (Transmitting)
-const char currentPosistionPrefix[] = "\$p";
-const char startStoringPrefix[]    = "\$s";
+const String currentPosistionPrefix = "\$p";
+const String startStoringPrefix    = "\$s";
 const String rpmPrefix             = "\$r";
-const char feedRatePrefix[]        = "\$f";
-const char depthOfCutPrefix[]      = "\$d";
+const String feedRatePrefix        = "\$f";
+const String depthOfCutPrefix      = "\$d";
 
 // Prefix Rx (Receiving)
 const char startReamingPrefix[]           = "\$re";
@@ -129,22 +129,20 @@ void sendAllSerial()
     serialMeasure = -1;
   }
 
-  /*
   sendSerialMessage(startStoringPrefix, serialMeasure);
   sendSerialMessage(currentPosistionPrefix, getStepperPosition());
   sendSerialMessage(rpmPrefix, getRPM());
   sendSerialMessage(feedRatePrefix, getFeedRate());
   sendSerialMessage(depthOfCutPrefix, getDepthOfCut());
-  */
+  
 }
 
-/*void sendSerialMessage(const char* prefix, unsigned long value)
+void sendSerialMessage(String prefix, unsigned long value)
 {
   Serial.print(prefix);
   Serial.print(value);   
   Serial.print(postfix);
 }
-*/
 
 
 void sendSerialMessage(String prefix, int value)
@@ -154,8 +152,8 @@ void sendSerialMessage(String prefix, int value)
   Serial.print(postfix);
 }
 
-/*
-void sendSerialMessage(const char* prefix, float value)
+
+void sendSerialMessage(String prefix, float value)
 {
   Serial.print(prefix);
   Serial.print(value);   
@@ -163,10 +161,9 @@ void sendSerialMessage(const char* prefix, float value)
 }
 
 
-void sendSerialMessage(const char* prefix, long int value)
+void sendSerialMessage(String prefix, long int value)
 {
   Serial.print(prefix);
   Serial.print(value);   
   Serial.print(postfix);
 }
-*/

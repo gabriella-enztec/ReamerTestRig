@@ -18,7 +18,7 @@ const unsigned long debounceDelay = 50;
 // Prefix Tx (Transmitting)
 const char currentPosistionPrefix[] = "\$p";
 const char startStoringPrefix[]    = "\$s";
-const char rpmPrefix[]             = "\$r";
+const String rpmPrefix             = "\$r";
 const char feedRatePrefix[]        = "\$f";
 const char depthOfCutPrefix[]      = "\$d";
 
@@ -37,7 +37,7 @@ const char increaseDepthOfCutPrefix[]     = "\$dci";
 const char decreaseDepthOfCutPrefix[]     = "\$dcd";
 
 // Postfix
-const char postfix[] = "\\n";
+const String postfix = "\\n";
 
 
 
@@ -51,6 +51,7 @@ void serial_init()
 // Buffer for incoming serial command
 char serialBuffer[20];
 uint8_t bufferIndex = 0;
+
 
 void checkSerialCommand()
 {
@@ -117,7 +118,6 @@ void checkSerialCommand()
 }
 
 
-
 void sendAllSerial()
 {
   if (getRigState() == REAMING)
@@ -129,50 +129,44 @@ void sendAllSerial()
     serialMeasure = -1;
   }
 
+  /*
   sendSerialMessage(startStoringPrefix, serialMeasure);
   sendSerialMessage(currentPosistionPrefix, getStepperPosition());
   sendSerialMessage(rpmPrefix, getRPM());
   sendSerialMessage(feedRatePrefix, getFeedRate());
   sendSerialMessage(depthOfCutPrefix, getDepthOfCut());
-
+  */
 }
 
-
-void sendSerialMessage(const char* prefix, unsigned long value)
+/*void sendSerialMessage(const char* prefix, unsigned long value)
 {
   Serial.print(prefix);
   Serial.print(value);   
   Serial.print(postfix);
-  Serial.println();
 }
+*/
 
 
-void sendSerialMessage(const char* prefix, int value)
+void sendSerialMessage(String prefix, int value)
 {
   Serial.print(prefix);
   Serial.print(value);   
   Serial.print(postfix);
-  Serial.println();
 }
 
-
+/*
 void sendSerialMessage(const char* prefix, float value)
 {
   Serial.print(prefix);
   Serial.print(value);   
   Serial.print(postfix);
-  Serial.println();
 }
+
 
 void sendSerialMessage(const char* prefix, long int value)
 {
   Serial.print(prefix);
   Serial.print(value);   
   Serial.print(postfix);
-  Serial.println();
 }
-
-
-
-
-
+*/

@@ -2,6 +2,8 @@
 #include "buttons.h"
 #include "ream.h"
 #include "stepper_movement.h"
+#include "comms.h"
+#include "settings.h"
 
 // Button configuration - now defined here (not in header)
 const int btnPins[] = {DOWN_BUTTON, UP_BUTTON, ZERO_BUTTON, REAM_BUTTON, TEST_BUTTON};
@@ -59,6 +61,11 @@ void checkButtons()
   if(btn[BTN_REAM].fell()) // REAM
   {
     reamCycle();
+  }
+
+  if(btn[BTN_TEST].fell())
+  {
+    sendSerialMessage("\$r", getRPM());
   }
 
 }

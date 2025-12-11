@@ -6,8 +6,8 @@
 #include "settings.h"
 
 // Button configuration - now defined here (not in header)
-const int btnPins[] = {DOWN_BUTTON, UP_BUTTON, ZERO_BUTTON, REAM_BUTTON, TEST_BUTTON};
-const int numberOfButtons = 5;
+const int btnPins[] = {DOWN_BUTTON, UP_BUTTON, ZERO_BUTTON, REAM_BUTTON};
+const int numberOfButtons = 4;
 Bounce btn[numberOfButtons];
 
 // Button state tracking
@@ -61,11 +61,6 @@ void checkButtons()
   if(btn[BTN_REAM].fell()) // REAM
   {
     reamCycle();
-  }
-
-  if(btn[BTN_TEST].fell())
-  {
-    sendSerialMessage("\$r", getRPM());
   }
 
 }

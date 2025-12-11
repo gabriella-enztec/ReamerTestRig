@@ -8,7 +8,7 @@
 
 #define SENDMESSAGE_PERIOD 200 // ms
 #define CHECKSERIAL_PERIOD 100 // ms
-#define CHECKPHYSICALBUTTON_PERIOD 50 // ms
+#define CHECKPHYSICALBUTTON_PERIOD 1 // ms
 
 long sendmessage_previous_time = 0;
 long checkphysicalbutton_previous_time = 0;
@@ -45,7 +45,7 @@ void loop()
 
   if (currenttime - checkphysicalbutton_previous_time >= CHECKPHYSICALBUTTON_PERIOD)
   {
-    // checkButtons(); // Checks Physical Buttons
+    checkButtons(); // Checks Physical Buttons
     checkphysicalbutton_previous_time = currenttime;
   }
 

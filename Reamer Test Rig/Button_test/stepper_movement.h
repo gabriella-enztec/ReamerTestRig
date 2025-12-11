@@ -6,13 +6,15 @@
 
 void move(float target_position, float speed);
 void manualPositioning(bool upP, bool downP);
+void manualPositioningWSpeed(bool upP, bool downP, float speed);
 void stepper_movement_init();
 void zero();
 long getStepperPosition();
-long getStepperPositionmm();
+float getStepperPositionmm();
 
 // Movement Speed Settings
-#define RAPIDSPEED 5 // mm/s
+#define MANUALSPEED 5 // mm/s
+#define RAPIDSPEED 2 // mm/s
 #define POSITIONSPEED 2 // mm/s
 
 #endif

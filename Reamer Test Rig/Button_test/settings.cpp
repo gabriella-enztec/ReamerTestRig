@@ -24,6 +24,8 @@ int RPM = 270;
 float FEED = 0.5;
 float DOC = 4;
 
+float LOAD = 0;
+
 
 void initSettings() {
   loadDefaultReamingSettings();
@@ -90,4 +92,16 @@ float getFeedRate()
 float getDepthOfCut()
 {
   return DOC;
+}
+
+
+void setLoad(float load)
+{
+  LOAD = load;
+}
+
+
+float getLoad()
+{
+  return LOAD;
 }

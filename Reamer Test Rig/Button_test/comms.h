@@ -14,4 +14,7 @@ void sendSerialMessage(String prefix, int value);
 void sendSerialMessage(String prefix, float value);
 void sendSerialMessage(String prefix, long int value);
 
+void processMessage(char* msg);
+void checkSerialLoad(char c);
+
 #endif

@@ -1,10 +1,13 @@
 
 #include "stepper_movement.h"
 #include "comms.h"
+#include "settings.h"
 
 // Stepper Motor Pins
 #define DirPin 12       // Pin sets direction of rotation
 #define StepPin 10      // Pin activates motion
+
+float zeroingLoad = 10;
 
 const float STEPS_PER_MM = 200.0f;
 
@@ -21,7 +24,28 @@ void stepper_movement_init()
 // Sets Zero
 void zero()
 {
-  stepper.setCurrentPosition(0);
+  float starting_load = getLoad();
+  float load = 0;
+  while (1)
+  {
+    checkSerialCommand();
+    load = getLoad();
+    if(load >= starting_load + zeroingLoad)
+    {
+      stepper.setCurrentPosition(0);
+      manualPositioningWSpeed(false, false, 0);
+      move(-2, 5);
+      break;
+    }
+    else
+    {
+      manualPositioningWSpeed(false, true, 0.2);
+    }
+  }
+
+
+
+
 }
 
 
@@ -74,12 +98,37 @@ void manualPositioning(bool upP, bool downP)
   }
 }
 
+
+void manualPositioningWSpeed(bool upP, bool downP, float speed)
+{
+  if(!(upP && downP))
+  {
+    if(upP)
+    {
+      stepper.setSpeed(-speed*STEPS_PER_MM);    // negative speed = opposite direction
+      stepper.runSpeed();
+      sendPosistion();
+    }
+    else if (downP)
+    {
+      stepper.setSpeed(speed*STEPS_PER_MM);    // negative speed = opposite direction
+      stepper.runSpeed();
+      sendPosistion();
+    }
+  }
+  else
+  {
+    stepper.setSpeed(0);
+  }
+}
+
+
 long getStepperPosition()
 {
   return stepper.currentPosition();
 }
 
-long getStepperPositionmm()
+float getStepperPositionmm()
 {
-    return stepper.currentPosition()/STEPS_PER_MM;
+    return (float)stepper.currentPosition()/STEPS_PER_MM;
 }

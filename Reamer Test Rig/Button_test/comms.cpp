@@ -24,6 +24,7 @@ const String startStoringPrefix    = "\$s";
 const String rpmPrefix             = "\$r";
 const String feedRatePrefix        = "\$f";
 const String depthOfCutPrefix      = "\$d";
+const String LoadPrefix            = "\$l";
 
 // Prefix Rx (Receiving)
 const char startReamingPrefix           = 'a';
@@ -38,9 +39,11 @@ const char increaseFeedRatePrefix       = 'i';
 const char decreaseFeedRatePrefix       = 'j';
 const char increaseDepthOfCutPrefix     = 'k';
 const char decreaseDepthOfCutPrefix     = 'l';
+const char loadPrefix                   = 'm';
 
 // Postfix
 const String postfix = "\\n";
+const char postfix2 = 'x';
 
 
 
@@ -54,6 +57,7 @@ void serial_init()
 // Buffer for incoming serial command
 char serialBuffer[20];
 uint8_t bufferIndex = 0;
+bool loading = false;
 
 
 void checkSerialCommand()
@@ -62,6 +66,38 @@ void checkSerialCommand()
     {
         char c = Serial.read();
 
+        if (!loading && c == loadPrefix)
+        {
+            loading = true;
+            bufferIndex = 0;           // reset buffer
+            continue;
+        }
+
+        // If we are currently loading a message
+        if (loading)
+        {
+            // Check postfix (end of message)
+            if (c == postfix2)
+            {
+                serialBuffer[bufferIndex] = '\0'; // null-terminate
+                processMessage(serialBuffer);     // handle the message
+                loading = false;                  // reset state
+                bufferIndex = 0;
+                continue;
+            }
+
+            // Store character safely into buffer
+            if (bufferIndex < sizeof(serialBuffer) - 1)
+            {
+                serialBuffer[bufferIndex++] = c;
+            }
+            else
+            {
+                // Buffer overflow → reset
+                loading = false;
+                bufferIndex = 0;
+            }
+        }
         // Debounce
         if (millis() - lastCommandTime > debounceDelay)
         {
@@ -129,7 +165,7 @@ void sendAllSerial()
   sendSerialMessage(rpmPrefix, getRPM());
   sendSerialMessage(feedRatePrefix, getFeedRate());
   sendSerialMessage(depthOfCutPrefix, getDepthOfCut());
-  
+    sendSerialMessage(LoadPrefix, getLoad());
 }
 
 void sendPosistion()
@@ -171,4 +207,13 @@ void sendSerialMessage(String prefix, long int value)
   Serial.print(prefix);
   Serial.print(value);   
   Serial.print(postfix);
+}
+
+
+void processMessage(char* msg)
+{
+    // Convert string → float
+    float value = atof(msg);
+    setLoad(value);
+
 }

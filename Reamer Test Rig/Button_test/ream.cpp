@@ -21,9 +21,15 @@ void reamCycle()
   sendAllSerial();
   move(getDepthOfCut(), getFeedRate());
 
-
   //Extraction
   setRetracting();
   move(STARTINGCLEARANCE, RAPIDSPEED);
   sendAllSerial();
 }
+
+/*
+void zeroCycle()
+{
+
+}
+*/

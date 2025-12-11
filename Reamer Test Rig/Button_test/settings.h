@@ -26,5 +26,8 @@ void loadDefaultDrillingSettings();
 int getRPM();
 float getFeedRate();
 float getDepthOfCut();
+float getLoad();
+
+void setLoad(float load);
 
 #endif

@@ -7,7 +7,7 @@
 #define DirPin 12       // Pin sets direction of rotation
 #define StepPin 10      // Pin activates motion
 
-float zeroingLoad = 10;
+float zeroingLoad = 5;
 
 const float STEPS_PER_MM = 200.0f;
 

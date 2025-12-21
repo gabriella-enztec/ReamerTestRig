@@ -14,7 +14,7 @@ void reamCycle()
 {
   // Move to 2mm above block
   setPositioning();
-  move(STARTINGCLEARANCE, RAPIDSPEED);
+  move(STARTINGCLEARANCE, getManualFeedRate());
 
   // Reaming cut
   setReaming();
@@ -23,7 +23,7 @@ void reamCycle()
 
   //Extraction
   setRetracting();
-  move(STARTINGCLEARANCE, RAPIDSPEED);
+  move(STARTINGCLEARANCE, getManualFeedRate());
   sendAllSerial();
 }
 

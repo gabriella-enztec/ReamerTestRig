@@ -12,9 +12,5 @@ void zero();
 long getStepperPosition();
 float getStepperPositionmm();
 
-// Movement Speed Settings
-#define MANUALSPEED 5 // mm/s
-#define RAPIDSPEED 2 // mm/s
-#define POSITIONSPEED 2 // mm/s
 
 #endif

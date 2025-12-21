@@ -81,13 +81,13 @@ void manualPositioning(bool upP, bool downP)
   {
     if(upP)
     {
-      stepper.setSpeed(-RAPIDSPEED*STEPS_PER_MM);    // negative speed = opposite direction
+      stepper.setSpeed(-getManualFeedRate()*STEPS_PER_MM);    // negative speed = opposite direction
       stepper.runSpeed();
       sendPosistion();
     }
     else if (downP)
     {
-      stepper.setSpeed(RAPIDSPEED*STEPS_PER_MM);    // negative speed = opposite direction
+      stepper.setSpeed(getManualFeedRate()*STEPS_PER_MM);    // negative speed = opposite direction
       stepper.runSpeed();
       sendPosistion();
     }

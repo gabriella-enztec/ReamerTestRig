@@ -18,6 +18,9 @@ void decreaseFeedRate();
 void increaseDepthOfCut();
 void decreaseDepthOfCut();
 
+void increaseManualFeedRate();
+void decreaseManualFeedRate();
+
 // Reset functions
 void loadDefaultReamingSettings();
 void loadDefaultDrillingSettings();
@@ -27,7 +30,9 @@ int getRPM();
 float getFeedRate();
 float getDepthOfCut();
 float getLoad();
+float getManualFeedRate();
 
 void setLoad(float load);
+
 
 #endif

@@ -25,6 +25,7 @@ const String rpmPrefix             = "\$r";
 const String feedRatePrefix        = "\$f";
 const String depthOfCutPrefix      = "\$d";
 const String LoadPrefix            = "\$l";
+const String rapidSpeedPrefix      = "\$o";
 
 // Prefix Rx (Receiving)
 const char startReamingPrefix           = 'a';
@@ -40,6 +41,8 @@ const char decreaseFeedRatePrefix       = 'j';
 const char increaseDepthOfCutPrefix     = 'k';
 const char decreaseDepthOfCutPrefix     = 'l';
 const char loadPrefix                   = 'm';
+const char increaseManualFeedRatePrefix = 'n';
+const char decreaseManualFeedRatePrefix = 'o';
 
 // Postfix
 const String postfix = "\\n";
@@ -133,6 +136,12 @@ void checkSerialCommand()
                 case decreaseDepthOfCutPrefix:
                     decreaseDepthOfCut();
                     break;
+                case increaseManualFeedRatePrefix:
+                    increaseManualFeedRate();
+                    break;
+                case decreaseManualFeedRatePrefix:
+                    decreaseManualFeedRate();
+                    break;
                 default:
                     break;
             }
@@ -151,21 +160,22 @@ void checkSerialCommand()
 
 void sendAllSerial()
 {
-  if (getRigState() == REAMING)
-  {
+    if (getRigState() == REAMING)
+    {
     serialMeasure = 1;
-  }
-  else
-  {
+    }
+    else
+    {
     serialMeasure = -1;
-  }
+    }
 
-  sendSerialMessage(startStoringPrefix, serialMeasure);
-  sendSerialMessage(currentPosistionPrefix, getStepperPositionmm());
-  sendSerialMessage(rpmPrefix, getRPM());
-  sendSerialMessage(feedRatePrefix, getFeedRate());
-  sendSerialMessage(depthOfCutPrefix, getDepthOfCut());
+    sendSerialMessage(startStoringPrefix, serialMeasure);
+    sendSerialMessage(currentPosistionPrefix, getStepperPositionmm());
+    sendSerialMessage(rpmPrefix, getRPM());
+    sendSerialMessage(feedRatePrefix, getFeedRate());
+    sendSerialMessage(depthOfCutPrefix, getDepthOfCut());
     sendSerialMessage(LoadPrefix, getLoad());
+    sendSerialMessage(rapidSpeedPrefix, getManualFeedRate());
 }
 
 void sendPosistion()

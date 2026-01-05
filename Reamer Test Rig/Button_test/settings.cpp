@@ -23,8 +23,8 @@ const float DOC_REAMING_DEAFULT = 4;
 
 // ----------- DEAFULT DRILLING SETTINGS -----------
 const int RPM_DRILL_DEAFULT = 270;
-const float FEED_DRILL_DEAFULT = 2;
-const float DOC_DRILL_DEAFULT = 55;
+const float FEED_DRILL_DEAFULT = 3;
+const float DOC_DRILL_DEAFULT = 65;
 
 // ----------- CURRENT SETTINGS -----------
 int RPM = 270;

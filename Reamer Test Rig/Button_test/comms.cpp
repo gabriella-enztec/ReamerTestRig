@@ -178,6 +178,7 @@ void sendAllSerial()
     sendSerialMessage(rapidSpeedPrefix, getManualFeedRate());
 }
 
+
 void sendPosistion()
 {
     if (millis() - sincelastposition >= timepositionpast)

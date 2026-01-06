@@ -2,8 +2,10 @@
 #include "buttons.h"
 #include "ream.h"
 #include "stepper_movement.h"
+#include "motion_controller.h"
 #include "comms.h"
 #include "settings.h"
+#include "sequenceManager.h"
 
 // Button configuration - now defined here (not in header)
 const int btnPins[] = {DOWN_BUTTON, UP_BUTTON, ZERO_BUTTON, REAM_BUTTON};
@@ -35,32 +37,32 @@ void checkButtons()
 
   if(btn[BTN_DOWN].fell()) // Down
   {
-    downPressed = true;
+    manualMovement(DOWN, getManualFeedRate());
   }
-  else if(btn[BTN_DOWN].rose())
+  else if (btn[BTN_DOWN].rose())
   {
-    downPressed = false;
+    manualMovement(STOP, getManualFeedRate());
   }
 
   if(btn[BTN_UP].fell()) // UP
   {
-    upPressed = true;
+    manualMovement(UP, getManualFeedRate());
   }
-  else if(btn[BTN_UP].rose())
+  else if (btn[BTN_UP].rose())
   {
-    upPressed = false;
+    manualMovement(STOP, getManualFeedRate());
   }
-
-  manualPositioning(upPressed, downPressed);
 
   if(btn[BTN_ZERO].fell()) // ZERO
   {
-    zero();
+    Serial.println("ZERO BUTTON");
+    setActiveSequence(SEQ_ZERO);
   }
 
   if(btn[BTN_REAM].fell()) // REAM
   {
-    reamCycle();
+    Serial.println("REAM BUTTON");
+    setActiveSequence(SEQ_REAM);
   }
 
 }

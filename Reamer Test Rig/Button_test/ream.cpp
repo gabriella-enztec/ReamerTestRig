@@ -1,6 +1,6 @@
 
 #include "stepper_movement.h"
-#include "state_machine.h"
+#include "motion_controller.h"
 #include "comms.h"
 #include "settings.h"
 
@@ -8,28 +8,59 @@
 #define CLEARANCE 10 // mm
 #define STARTINGCLEARANCE -2 // mm
 
-
-// Reaming Instructions
-void reamCycle()
+enum ReamSteps
 {
-  // Move to 2mm above block
-  setPositioning();
-  move(STARTINGCLEARANCE, getManualFeedRate());
+  POSITION,
+  REAM,
+  EXTRACT
+};
 
-  // Reaming cut
-  setReaming();
-  sendAllSerial();
-  move(getDepthOfCut(), getFeedRate());
+ReamSteps current_step = POSITION;
+bool ream_finished = false;
 
-  //Extraction
-  setRetracting();
-  move(STARTINGCLEARANCE, getManualFeedRate());
-  sendAllSerial();
+
+void reamSequence()
+{
+  switch (current_step)
+  {
+    case POSITION:
+      positionalMovement(STARTINGCLEARANCE, getManualFeedRate());
+      if (positioningFinished())
+      {
+        current_step = REAM;
+      }
+      break;
+    
+    case REAM:
+      positionalMovement(getDepthOfCut(), getFeedRate());
+      if (positioningFinished())
+      {
+        current_step = EXTRACT;
+      }
+      break;
+    
+    case EXTRACT:
+      positionalMovement(STARTINGCLEARANCE, getManualFeedRate());
+      if (positioningFinished())
+      {
+        current_step = REAM;
+        ream_finished = true;
+      }
+      break;
+  }
 }
 
-/*
-void zeroCycle()
-{
 
+bool reamFinished()
+{
+  if (ream_finished)
+  {
+    ream_finished = false;
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
-*/
+

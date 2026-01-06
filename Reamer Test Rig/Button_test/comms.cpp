@@ -3,8 +3,8 @@
 #include "buttons.h"
 #include "ream.h"
 #include "stepper_movement.h"
-#include "state_machine.h" 
 #include "settings.h"
+#include "sequenceManager.h"
 
 // Serial communication settings
 #define INPUT_BUFFER_LEN 64
@@ -47,7 +47,6 @@ const char decreaseManualFeedRatePrefix = 'o';
 // Postfix
 const String postfix = "\\n";
 const char postfix2 = 'x';
-
 
 
 void serial_init()
@@ -107,10 +106,10 @@ void checkSerialCommand()
             switch (c)
             {
                 case startReamingPrefix:
-                    reamCycle();
+                    setActiveSequence(SEQ_REAM);
                     break;
                 case zeroPrefix:
-                    zero();
+                    setActiveSequence(SEQ_ZERO);
                     break;
                 case deafultReamingSettingPrefix:
                     loadDefaultReamingSettings();
@@ -147,28 +146,12 @@ void checkSerialCommand()
             }
             lastCommandTime = millis();
         }
-
-        else if (c == manualUpPrefix) {     // "$up"
-            manualPositioning(true, false);
-        }
-        else if (c == manualDownPrefix) {   // "$down"
-            manualPositioning(false, true);
-        }
     }
 }
 
 
 void sendAllSerial()
 {
-    if (getRigState() == REAMING)
-    {
-    serialMeasure = 1;
-    }
-    else
-    {
-    serialMeasure = -1;
-    }
-
     sendSerialMessage(startStoringPrefix, serialMeasure);
     sendSerialMessage(currentPosistionPrefix, getStepperPositionmm());
     sendSerialMessage(rpmPrefix, getRPM());

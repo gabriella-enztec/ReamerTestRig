@@ -37,6 +37,7 @@ void checkButtons()
 
   if(btn[BTN_DOWN].fell()) // Down
   {
+    Serial.println("DOWN BUTTON");
     manualMovement(DOWN, getManualFeedRate());
   }
   else if (btn[BTN_DOWN].rose())
@@ -46,7 +47,8 @@ void checkButtons()
 
   if(btn[BTN_UP].fell()) // UP
   {
-    manualMovement(UP, getManualFeedRate());
+    Serial.println("UP BUTTON");
+    manualMovement(UP, -1*getManualFeedRate());
   }
   else if (btn[BTN_UP].rose())
   {

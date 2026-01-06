@@ -15,6 +15,8 @@ long getStepperPosition();
 float getStepperPositionmm();
 bool getMotionComplete();
 
+void runStepper();
+
 void directionalMotion(Direction direction);
 void positionalMotion();
 void idle();

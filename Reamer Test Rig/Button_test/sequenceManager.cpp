@@ -28,7 +28,7 @@ void updateSequences()
     switch(activeSequence)
     {
         case SEQ_ZERO:
-            //Serial.println("SEQ_ZERO");
+            Serial.println("SEQ_ZERO");
             zeroSequenceUpdate();
             if(zeroFinished())
             {
@@ -37,7 +37,7 @@ void updateSequences()
             break;
 
         case SEQ_REAM:
-            //Serial.println("SEQ_REAM");
+            Serial.println("SEQ_REAM");
             reamSequence();
             if (reamFinished())
             {

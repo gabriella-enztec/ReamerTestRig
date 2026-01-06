@@ -38,6 +38,10 @@ void checkMotion()
 
     case (DIRECTIONAL):
       directionalMotion(direction);
+      if(direction == STOP)
+      {
+        motion_mode = IDLE;
+      }
       break;
 
     case (POSITIONAL):

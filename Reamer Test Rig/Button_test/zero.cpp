@@ -23,13 +23,13 @@ void zeroSequenceUpdate()
   switch (step)
   {
     case (STARTINGLOAD):
-      //Serial.println("STARTINGLOAD ZERO");
+      Serial.println("STARTINGLOAD ZERO");
       starting_load = getLoad();
       step = CHECKLOAD;
       break;
 
     case (CHECKLOAD):
-      //Serial.println("CHECKLOAD ZERO");
+      Serial.println("CHECKLOAD ZERO");
       manualMovement(DOWN, zeroingSpeed);
       if(getLoad() >= starting_load + zeroingload)
       {
@@ -39,7 +39,7 @@ void zeroSequenceUpdate()
       break;
     
     case (RETURN):
-      //Serial.println("RETURN ZERO");
+      Serial.println("RETURN ZERO");
       positionalMovement(finishingDistance, getManualFeedRate());
       if (positioningFinished())
       {

@@ -23,10 +23,13 @@ bool positioncalibrated = false;
 float stepper_target_position = 0;
 float stepper_speed = 0;
 
+Direction previous_direction = STOP;
+
 void stepper_movement_init()
 {
-  stepper.setMaxSpeed(1000);    
-  stepper.setAcceleration(10000); 
+  stepper.setMaxSpeed(1000);   
+  stepper.setAcceleration(10000);
+  stepper.setSpeed(0);
 }
 
 
@@ -62,7 +65,6 @@ void positionalMotion()
   {
     stepper.setSpeed(stepper_speed * STEPS_PER_MM);
     if (stepper.currentPosition() < stepper_target_position * STEPS_PER_MM) {
-      stepper.runSpeed();
     }
     else
     {
@@ -74,7 +76,6 @@ void positionalMotion()
   {
     stepper.setSpeed(-stepper_speed *STEPS_PER_MM);
     if (stepper.currentPosition() > stepper_target_position * STEPS_PER_MM) {
-      stepper.runSpeed();
     }
     else
     {
@@ -87,21 +88,34 @@ void positionalMotion()
 
 void directionalMotion(Direction direction)
 {
+  Serial.println("DirectionalMoition");
   stepper_speed = getStepperSpeed();
 
-  if (direction == UP)
+  if (direction == UP && previous_direction != UP)
   {
-    stepper.setSpeed(-stepper_speed*STEPS_PER_MM);    // negative speed = upwards direction
+    Serial.println("Up moving");
+    Serial.println(stepper_speed);
+    stepper.setSpeed(stepper_speed*STEPS_PER_MM);    // negative speed = upwards direction
+    previous_direction = UP;
   }
-  else if (direction == DOWN)
+  else if (direction == DOWN && previous_direction != DOWN)
   {
-    stepper.setSpeed(stepper_speed*STEPS_PER_MM);    // postive speed = downwards direction
+    Serial.println("Down moving");
+    Serial.println(stepper_speed);
+    stepper.setSpeed(stepper_speed *STEPS_PER_MM);    // postive speed = downwards direction
+    previous_direction = DOWN;
   }
-  else
+  else if (direction == STOP && previous_direction != STOP)
   {
+    Serial.println("Stop Moving");
     stepper.setSpeed(0);
+    previous_direction = STOP;
   }
+}
 
+
+void runStepper()
+{
   stepper.runSpeed();
 }
 

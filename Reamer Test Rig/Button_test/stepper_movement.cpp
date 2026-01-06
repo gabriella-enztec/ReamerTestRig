@@ -47,41 +47,28 @@ float getStepperPositionmm()
 
 void positionalMotion()
 {
+  // Only set direction on first call or direction change
+  if(!positioncalibrated)
+  {
+    stepper_speed = getStepperSpeed();
+    targetupwards = (stepper.currentPosition() < stepper_target_position * STEPS_PER_MM);
+    stepper.setSpeed(targetupwards ? stepper_speed : -stepper_speed * STEPS_PER_MM);
+    positioncalibrated = true;
+    motionComplete = false;  // Only reset here
+  }
+
   stepper.moveTo(stepper_target_position * STEPS_PER_MM);
 
-  if(stepper.currentPosition() < stepper_target_position && !positioncalibrated)
+  // Check if target reached
+  if(targetupwards && stepper.currentPosition() >= stepper_target_position * STEPS_PER_MM)
   {
-    targetupwards = true;
-    positioncalibrated = true;
+    motionComplete = true;
+    positioncalibrated = false;
   }
-  else
+  else if(!targetupwards && stepper.currentPosition() <= stepper_target_position * STEPS_PER_MM)
   {
-    targetupwards = false;
-    positioncalibrated = true;
-  }
-
-  // Checks if target position is above current position
-  if(targetupwards)
-  {
-    stepper.setSpeed(stepper_speed * STEPS_PER_MM);
-    if (stepper.currentPosition() < stepper_target_position * STEPS_PER_MM) {
-    }
-    else
-    {
-      motionComplete = true;
-      positioncalibrated = false;
-    }
-  }
-  else   // Checks if target position is above below position
-  {
-    stepper.setSpeed(-stepper_speed *STEPS_PER_MM);
-    if (stepper.currentPosition() > stepper_target_position * STEPS_PER_MM) {
-    }
-    else
-    {
-      motionComplete = true;
-      positioncalibrated = false;
-    }
+    motionComplete = true;
+    positioncalibrated = false;
   }
 }
 
@@ -136,6 +123,7 @@ bool getMotionComplete()
 {
   if (motionComplete)
   {
+    Serial.println("Motion Complete");
     motionComplete = false;
     return true;
   }

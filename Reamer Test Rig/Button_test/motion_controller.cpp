@@ -17,6 +17,7 @@ void manualMovement(Direction dir, float sp)   // ✅ No trailing comma
   direction = dir;
   movement_speed = sp;
   motion_mode = DIRECTIONAL;
+  positoning_finished = false;
 }
 
 
@@ -24,6 +25,7 @@ void positionalMovement(float tp, float sp)
 {
   target_position = tp;
   movement_speed = sp;
+  positoning_finished = false;
   motion_mode = POSITIONAL;
 }
 
@@ -48,6 +50,8 @@ void checkMotion()
       positionalMotion();
       if (getMotionComplete())
       {
+        Serial.println("Positional Finished");
+        positoning_finished = true;
         motion_mode = IDLE;
       }
       break;
@@ -64,6 +68,7 @@ bool positioningFinished()
 {
   if (positoning_finished)
   {
+    Serial.println("PositingFinsihedFunc");
     positoning_finished = false;
     return true;
   }

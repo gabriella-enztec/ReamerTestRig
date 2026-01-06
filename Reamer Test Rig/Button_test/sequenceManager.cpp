@@ -6,6 +6,7 @@
 #include <Arduino.h>
 
 static SequenceID activeSequence = SEQ_NONE;
+static SequenceID previousSequence = SEQ_NONE;
 static bool nodeEntered = false;
 
 void setActiveSequence(SequenceID seq)
@@ -28,20 +29,22 @@ void updateSequences()
     switch(activeSequence)
     {
         case SEQ_ZERO:
-            Serial.println("SEQ_ZERO");
             zeroSequenceUpdate();
+            //previousSequence = SEQ_ZERO;
             if(zeroFinished())
             {
-              setActiveSequence(SEQ_NONE); 
+                setActiveSequence(SEQ_NONE);
+                //previousSequence =  SEQ_NONE;
             }
             break;
 
         case SEQ_REAM:
-            Serial.println("SEQ_REAM");
             reamSequence();
+            //previousSequence = SEQ_REAM;
             if (reamFinished())
             {
-              setActiveSequence(SEQ_NONE); 
+                setActiveSequence(SEQ_NONE);
+                //previousSequence = SEQ_ZERO; 
             }
             break;
 

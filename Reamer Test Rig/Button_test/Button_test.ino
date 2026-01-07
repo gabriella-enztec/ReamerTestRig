@@ -6,11 +6,11 @@
 #include "comms.h"
 #include "settings.h"
 
-#define SENDMESSAGE_PERIOD 100 // ms
-#define CHECKSERIAL_PERIOD 100 // ms
+#define SENDMESSAGE_PERIOD 50 // ms
+#define CHECKSERIAL_PERIOD 50 // ms
 #define CHECKPHYSICALBUTTON_PERIOD 50 // ms
 #define SEQUENCEMANAGER_PERIOD 50 // ms
-#define MOTIONCONTROLLER_PERIOD 20 // ms
+#define MOTIONCONTROLLER_PERIOD 5 // ms
 
 long sendmessage_previous_time = 0;
 long checkphysicalbutton_previous_time = 0;
@@ -36,13 +36,13 @@ void loop()
 
   if (currenttime - sendmessage_previous_time >= SENDMESSAGE_PERIOD)
   {
-    //sendAllSerial(); // Sends infomation to DEWESoft
+    sendAllSerial(); // Sends infomation to DEWESoft
     sendmessage_previous_time = currenttime;
   }
 
   if (currenttime - checkserialcommand_previous_time >= CHECKSERIAL_PERIOD)
   {
-    //checkSerialCommand(); // Checks Commands Sent from DEWESoft
+    checkSerialCommand(); // Checks Commands Sent from DEWESoft
     checkserialcommand_previous_time = currenttime;
   }
 

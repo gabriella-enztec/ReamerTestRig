@@ -56,10 +56,6 @@ void positionalMotion()
   {
     stepper_target_position = getTargetPosition() * STEPS_PER_MM;
     stepper_speed = getStepperSpeed();
-    Serial.println("Calibrate");
-    Serial.println(stepper.currentPosition() / STEPS_PER_MM);
-    Serial.println(stepper_target_position / STEPS_PER_MM);
-    Serial.println(stepper_speed);
     targetupwards = (stepper.currentPosition() < stepper_target_position);
     if(targetupwards)
     {
@@ -75,8 +71,6 @@ void positionalMotion()
   }
 
   stepper_current_position = stepper.currentPosition();
-  Serial.print("Position:");
-  Serial.println(stepper_current_position);
   
   // Check if target reached
   if(targetupwards && stepper_current_position >= stepper_target_position)
@@ -139,7 +133,6 @@ bool getMotionComplete()
 {
   if (motionComplete)
   {
-    Serial.println("Motion Complete");
     motionComplete = false;
     return true;
   }

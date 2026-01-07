@@ -52,6 +52,7 @@ void checkMotion()
       {
         positoning_finished = true;
         motion_mode = IDLE;
+        setActiveSequence(SEQ_NONE);
       }
       break;
     
@@ -67,7 +68,7 @@ bool positioningFinished()
 {
   if (positoning_finished)
   {
-    Serial.println("PositingFinsihedFunc");
+
     positoning_finished = false;
     return true;
   }

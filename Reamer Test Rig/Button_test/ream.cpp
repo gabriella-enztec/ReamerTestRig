@@ -37,14 +37,12 @@ void reamSequence()
     case POSITION:
       if (previous_step != POSITION)
       {
-        Serial.println("Set Positional Movement (Position)");
         positionalMovement(STARTINGCLEARANCE, getManualFeedRate());
         previous_step = POSITION;
       }
 
       else if (positioningFinished())
       {
-        Serial.println("Finsih positioning Reaming");
         current_step = REAM;
         return;
       }
@@ -53,7 +51,6 @@ void reamSequence()
     case REAM:
       if (previous_step != REAM)
       {
-        Serial.println("Set Positional Movement (REAM)");
         positionalMovement(getDepthOfCut(), getFeedRate());
         previous_step = REAM;
       }
@@ -68,7 +65,6 @@ void reamSequence()
     case EXTRACT:
       if(previous_step != EXTRACT)
       {
-        Serial.println("Set Positional Movement (EXTRACT)");
         positionalMovement(STARTINGCLEARANCE, getManualFeedRate());
         previous_step = EXTRACT;
       }
@@ -89,7 +85,6 @@ bool reamFinished()
 {
   if (ream_finished)
   {
-    Serial.println("Reaming Finished");
     reamReset();
     return true;
   }
@@ -99,4 +94,16 @@ bool reamFinished()
   }
 }
 
+
+int isReaming()
+{
+  if (current_step == REAM)
+  {
+    return 1;
+  }
+  else
+  {
+    return -1;
+  }
+}
 

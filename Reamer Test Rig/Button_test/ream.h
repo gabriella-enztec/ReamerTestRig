@@ -3,5 +3,6 @@
 
 void reamSequence();
 bool reamFinished();
+int isReaming();
 
 #endif

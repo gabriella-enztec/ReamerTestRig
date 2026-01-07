@@ -152,7 +152,7 @@ void checkSerialCommand()
 
 void sendAllSerial()
 {
-    sendSerialMessage(startStoringPrefix, serialMeasure);
+    sendSerialMessage(startStoringPrefix, isReaming());
     sendSerialMessage(currentPosistionPrefix, getStepperPositionmm());
     sendSerialMessage(rpmPrefix, getRPM());
     sendSerialMessage(feedRatePrefix, getFeedRate());

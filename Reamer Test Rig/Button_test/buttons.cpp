@@ -37,7 +37,6 @@ void checkButtons()
 
   if(btn[BTN_DOWN].fell()) // Down
   {
-    Serial.println("DOWN BUTTON");
     requestManualMove(DOWN);
   }
   else if (btn[BTN_DOWN].rose())
@@ -47,7 +46,6 @@ void checkButtons()
 
   if(btn[BTN_UP].fell()) // UP
   {
-    Serial.println("UP BUTTON");
     requestManualMove(UP);
 
   }
@@ -58,13 +56,11 @@ void checkButtons()
 
   if(btn[BTN_ZERO].fell()) // ZERO
   {
-    Serial.println("ZERO BUTTON");
     setActiveSequence(SEQ_ZERO);
   }
 
   if(btn[BTN_REAM].fell()) // REAM
   {
-    Serial.println("REAM BUTTON");
     setActiveSequence(SEQ_REAM);
   }
 

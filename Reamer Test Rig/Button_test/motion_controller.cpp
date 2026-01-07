@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "motion_controller.h"
 #include "stepper_movement.h"
+#include "sequenceManager.h"
 #include "settings.h"
 #include "comms.h"
 
@@ -52,7 +53,6 @@ void checkMotion()
       {
         positoning_finished = true;
         motion_mode = IDLE;
-        setActiveSequence(SEQ_NONE);
       }
       break;
     
@@ -68,7 +68,7 @@ bool positioningFinished()
 {
   if (positoning_finished)
   {
-
+    Serial.println("Positioning Finsihed");
     positoning_finished = false;
     return true;
   }

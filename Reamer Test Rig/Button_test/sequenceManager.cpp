@@ -56,6 +56,7 @@ void requestManualMove(Direction dir)
 
 void updateSequences()
 {
+    //Serial.println(activeSequence);
     switch(activeSequence)
     {
         case SEQ_ZERO:

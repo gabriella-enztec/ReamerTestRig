@@ -37,12 +37,14 @@ void reamSequence()
     case POSITION:
       if (previous_step != POSITION)
       {
+        Serial.println("Positoing");
         positionalMovement(STARTINGCLEARANCE, getManualFeedRate());
         previous_step = POSITION;
       }
 
       else if (positioningFinished())
       {
+        Serial.println("Positioing Finsihed");
         current_step = REAM;
         return;
       }
@@ -57,6 +59,7 @@ void reamSequence()
 
       else if (positioningFinished())
       {
+        Serial.println("REAMING Finsihed");
         current_step = EXTRACT;
         return;
       }
@@ -70,6 +73,7 @@ void reamSequence()
       }
       else if (positioningFinished())
       {
+        Serial.println("EXTRACTING Finsihed");
         current_step = NOPE;
         ream_finished = true;
         reamReset();

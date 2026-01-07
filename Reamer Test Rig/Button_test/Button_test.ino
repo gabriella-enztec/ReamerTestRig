@@ -10,7 +10,7 @@
 #define CHECKSERIAL_PERIOD 100 // ms
 #define CHECKPHYSICALBUTTON_PERIOD 50 // ms
 #define SEQUENCEMANAGER_PERIOD 50 // ms
-#define MOTIONCONTROLLER_PERIOD 50 // ms
+#define MOTIONCONTROLLER_PERIOD 20 // ms
 
 long sendmessage_previous_time = 0;
 long checkphysicalbutton_previous_time = 0;

@@ -38,21 +38,22 @@ void checkButtons()
   if(btn[BTN_DOWN].fell()) // Down
   {
     Serial.println("DOWN BUTTON");
-    manualMovement(DOWN, getManualFeedRate());
+    requestManualMove(DOWN);
   }
   else if (btn[BTN_DOWN].rose())
   {
-    manualMovement(STOP, getManualFeedRate());
+    requestManualMove(STOP);
   }
 
   if(btn[BTN_UP].fell()) // UP
   {
     Serial.println("UP BUTTON");
-    manualMovement(UP, -1*getManualFeedRate());
+    requestManualMove(UP);
+
   }
   else if (btn[BTN_UP].rose())
   {
-    manualMovement(STOP, getManualFeedRate());
+    requestManualMove(STOP);
   }
 
   if(btn[BTN_ZERO].fell()) // ZERO

@@ -1,12 +1,13 @@
 
 #include "stepper_movement.h"
 #include "motion_controller.h"
+#include "sequenceManager.h"
 #include "comms.h"
 #include "settings.h"
 
 
 #define CLEARANCE 10 // mm
-#define STARTINGCLEARANCE -2 // mm
+const float STARTINGCLEARANCE = -2.00; // mm
 
 enum ReamSteps
 {
@@ -17,8 +18,16 @@ enum ReamSteps
 };
 
 ReamSteps current_step = POSITION;
-ReamSteps previous_step = EXTRACT;
+ReamSteps previous_step = NOPE;
 bool ream_finished = false;
+
+
+void reamReset()
+{
+  current_step = POSITION;
+  previous_step = NOPE;
+  ream_finished = false;
+}
 
 
 void reamSequence()
@@ -67,6 +76,8 @@ void reamSequence()
       {
         current_step = NOPE;
         ream_finished = true;
+        reamReset();
+        setActiveSequence(SEQ_NONE);
         return;
       }
       break;
@@ -78,7 +89,8 @@ bool reamFinished()
 {
   if (ream_finished)
   {
-    ream_finished = false;
+    Serial.println("Reaming Finished");
+    reamReset();
     return true;
   }
   else
@@ -86,4 +98,5 @@ bool reamFinished()
     return false;
   }
 }
+
 

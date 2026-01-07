@@ -50,7 +50,6 @@ void checkMotion()
       positionalMotion();
       if (getMotionComplete())
       {
-        Serial.println("Positional Finished");
         positoning_finished = true;
         motion_mode = IDLE;
       }

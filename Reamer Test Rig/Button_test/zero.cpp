@@ -1,5 +1,6 @@
 #include "zero.h"
 #include "settings.h"
+#include "sequenceManager.h"
 #include "stepper_movement.h"
 
 enum ZeroSteps
@@ -46,6 +47,7 @@ void zeroSequenceUpdate()
         Serial.println("FINISHED ZERO");
         step = STARTINGLOAD;
         zero_finished = true;
+        setActiveSequence(SEQ_NONE);
       }
       break;
 

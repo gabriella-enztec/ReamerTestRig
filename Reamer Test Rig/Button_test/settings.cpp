@@ -1,4 +1,22 @@
-// settings.cpp
+
+/*
+ * settings.cpp
+ *
+ * File Overview:
+ *  - Stores and manages all machine operating parameters, including RPM, feed rate,
+ *    depth of cut (DOC), and manual/rapid feed speed.
+ *  - Provides functions to increase or decrease each parameter within safe limits.
+ *  - Supports default presets for reaming and drilling operations.
+ *  - Includes getter and setter functions to access current values and load readings.
+ *  - Initializes default settings on startup.
+ *
+ * Design Notes:
+ *  - Limits and step increments are configurable via constants at the top of the file.
+ *  - Current values are stored in global variables and updated via functions.
+ *  - Ensures all values stay within defined minimum and maximum limits.
+ *  - Separation of default presets and current settings allows easy switching between operations.
+ */
+
 #include "settings.h"
 
 // ----------- CONFIGURABLE LIMITS -----------
@@ -35,12 +53,24 @@ float RAPID_SPEED = 5;
 float LOAD = 0;
 
 
+/*
+ * initSettings()
+ *
+ * Initializes the system settings on startup.
+ * Loads the default reaming parameters.
+ */
 void initSettings() {
   loadDefaultReamingSettings();
 }
 
 
 // ========== RPM ==========
+/*
+ * increaseRPM()
+ *
+ * Increases the current RPM by the defined increment.
+ * Clamps the value to RPM_MAX to prevent exceeding limits.
+ */
 void increaseRPM() 
 {
   if (RPM + RPM_iter > RPM_MAX)
@@ -54,6 +84,12 @@ void increaseRPM()
 }
 
 
+/*
+ * decreaseRPM()
+ *
+ * Decreases the current RPM by the defined increment.
+ * Clamps the value to RPM_MIN to prevent going below limits.
+ */
 void decreaseRPM() 
 {
   if (RPM - RPM_iter < RPM_MIN)
@@ -67,6 +103,12 @@ void decreaseRPM()
 }
 
 // ========== FEED RATE ==========
+/*
+ * increaseFeedRate()
+ *
+ * Increases the current feed rate by the defined increment.
+ * Clamps the value to FEED_MAX to prevent exceeding limits.
+ */
 void increaseFeedRate() 
 {
   if (FEED + FEED_iter > FEED_MAX)
@@ -80,6 +122,12 @@ void increaseFeedRate()
 }
 
 
+/*
+ * decreaseFeedRate()
+ *
+ * Decreases the current feed rate by the defined increment.
+ * Clamps the value to FEED_MIN to prevent going below limits.
+ */
 void decreaseFeedRate() 
 {
   if (FEED - FEED_iter < FEED_MIN)
@@ -94,6 +142,12 @@ void decreaseFeedRate()
 
 
 // ========== DEPTH OF CUT ==========
+/*
+ * increaseDepthOfCut()
+ *
+ * Increases the current depth of cut (DOC) by the defined increment.
+ * Clamps the value to DOC_MAX to prevent exceeding limits.
+ */
 void increaseDepthOfCut() 
 {
   if (DOC + DOC_iter > DOC_MAX)
@@ -107,6 +161,12 @@ void increaseDepthOfCut()
 }
 
 
+/*
+ * decreaseDepthOfCut()
+ *
+ * Decreases the current depth of cut (DOC) by the defined increment.
+ * Clamps the value to DOC_MIN to prevent going below limits.
+ */
 void decreaseDepthOfCut() 
 {
   if (DOC - DOC_iter < DOC_MIN)
@@ -120,6 +180,12 @@ void decreaseDepthOfCut()
 }
 
 
+/*
+ * increaseManualFeedRate()
+ *
+ * Increases the manual feed/rapid speed by the defined increment.
+ * Clamps the value to RAPID_SPEED_MAX to prevent exceeding limits.
+ */
 void increaseManualFeedRate()
 {
   if (RAPID_SPEED + RAPID_SPEED_iter >= RAPID_SPEED_MAX)
@@ -133,6 +199,12 @@ void increaseManualFeedRate()
 }
 
 
+/*
+ * decreaseManualFeedRate()
+ *
+ * Decreases the manual feed/rapid speed by the defined increment.
+ * Clamps the value to RAPID_SPEED_MIN to prevent going below limits.
+ */
 void decreaseManualFeedRate()
 {
   if (RAPID_SPEED - RAPID_SPEED_iter <= RAPID_SPEED_MIN)
@@ -147,6 +219,12 @@ void decreaseManualFeedRate()
 
 
 // ========== DEFAULT PRESETS ==========
+
+/*
+ * loadDefaultReamingSettings()
+ *
+ * Loads the default reaming operation parameters into current settings.
+ */
 void loadDefaultReamingSettings() {
     RPM = RPM_REAMING_DEAFULT;
     FEED = FEED_REAMING_DEAFULT;
@@ -154,6 +232,11 @@ void loadDefaultReamingSettings() {
 }
 
 
+/*
+ * loadDefaultDrillingSettings()
+ *
+ * Loads the default drilling operation parameters into current settings.
+ */
 void loadDefaultDrillingSettings() {
     // You can use different defaults here
     RPM = RPM_DRILL_DEAFULT;
@@ -162,36 +245,66 @@ void loadDefaultDrillingSettings() {
 }
 
 
+/*
+ * getRPM()
+ *
+ * Returns the current RPM value.
+ */
 int getRPM()
 {
   return RPM;
 }
 
 
+/*
+ * getFeedRate()
+ *
+ * Returns the current feed rate value.
+ */
 float getFeedRate()
 {
   return FEED;
 }
 
 
+/*
+ * getDepthOfCut()
+ *
+ * Returns the current depth of cut (DOC) value.
+ */
 float getDepthOfCut()
 {
   return DOC;
 }
 
 
+/*
+ * setLoad()
+ *
+ * Updates the current load value.
+ */
 void setLoad(float load)
 {
   LOAD = load;
 }
 
 
+/*
+ * getLoad()
+ *
+ * Returns the current load value.
+ */
 float getLoad()
 {
   return LOAD;
 }
 
 
+/*
+ * getManualFeedRate()
+ *
+ * Returns the current manual feed / rapid speed.
+ */
 float getManualFeedRate()
 {
   return RAPID_SPEED;

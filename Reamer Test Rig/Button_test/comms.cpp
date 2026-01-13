@@ -1,4 +1,20 @@
 
+/*
+ * comms.cpp
+ *
+ * File Overview:
+ *  - Handles all serial communication between the embedded controller
+ *    and an external host (e.g. DEWESoft).
+ *  - Implements a lightweight command protocol for receiving control
+ *    commands and transmitting system telemetry.
+ *  - Acts as the primary interface between software control and the user.
+ *
+ * Communication Design:
+ *  - Single-character commands are used for immediate control actions.
+ *  - Framed messages (prefix + payload + postfix) are used for numeric data.
+ *  - All communication is non-blocking and processed incrementally.
+ */
+
 #include "comms.h"
 #include "buttons.h"
 #include "ream.h"
@@ -6,28 +22,42 @@
 #include "settings.h"
 #include "sequenceManager.h"
 
+// -----------------------------------------------------------------------------
+// Serial configuration and buffers
+// -----------------------------------------------------------------------------
+
 // Serial communication settings
-#define INPUT_BUFFER_LEN 64
+#define INPUT_BUFFER_LEN 64     // Reserved size for Arduino String input
+
 String input;
 int serialMeasure = 0;
 
-const int timepositionpast = 50;
+// Position telemetry timing
+const int timepositionpast = 50;    // ms between position updates
 int sincelastposition = 0;
 
 // Serial command timing
 unsigned long lastCommandTime = 0;
 const unsigned long debounceDelay = 50;
 
-// Prefix Tx (Transmitting)
-const String currentPosistionPrefix = "\$p";
-const String startStoringPrefix    = "\$s";
-const String rpmPrefix             = "\$r";
-const String feedRatePrefix        = "\$f";
-const String depthOfCutPrefix      = "\$d";
-const String LoadPrefix            = "\$l";
-const String rapidSpeedPrefix      = "\$o";
 
-// Prefix Rx (Receiving)
+// -----------------------------------------------------------------------------
+// Transmit (Tx) message prefixes
+// -----------------------------------------------------------------------------
+
+const String currentPosistionPrefix = "\$p";   // Current position (mm)
+const String startStoringPrefix    = "\$s";   // Reaming active flag
+const String rpmPrefix             = "\$r";   // Spindle RPM
+const String feedRatePrefix        = "\$f";   // Feed rate
+const String depthOfCutPrefix      = "\$d";   // Depth of cut
+const String LoadPrefix            = "\$l";   // Load value
+const String rapidSpeedPrefix      = "\$o";   // Manual feed rate
+
+
+// -----------------------------------------------------------------------------
+// Receive (Rx) command prefixes
+// -----------------------------------------------------------------------------
+
 const char startReamingPrefix           = 'a';
 const char zeroPrefix                   = 'b';
 const char manualUpPrefix               = 'c';
@@ -44,30 +74,63 @@ const char loadPrefix                   = 'm';
 const char increaseManualFeedRatePrefix = 'n';
 const char decreaseManualFeedRatePrefix = 'o';
 
-// Postfix
-const String postfix = "\\n";
-const char postfix2 = 'x';
+
+// -----------------------------------------------------------------------------
+// Message postfix definitions
+// -----------------------------------------------------------------------------
+
+const String postfix = "\\n";   // End-of-line for transmitted messages
+const char postfix2 = 'x';    // End-of-message marker for framed input
 
 
+// -----------------------------------------------------------------------------
+// Serial initialisation
+// -----------------------------------------------------------------------------
+
+
+/*
+ * serial_init()
+ *
+ * Configures the serial interface and reserves memory
+ * for incoming string data.
+ */
 void serial_init()
 {
-    // Initialize serial communication
   Serial.begin(9600, SERIAL_8N1);
   input.reserve(INPUT_BUFFER_LEN);
 }
 
-// Buffer for incoming serial command
-char serialBuffer[20];
-uint8_t bufferIndex = 0;
-bool loading = false;
+
+// -----------------------------------------------------------------------------
+// Incoming serial command buffer
+// -----------------------------------------------------------------------------
+
+char serialBuffer[20];     // Buffer for framed numeric messages
+uint8_t bufferIndex = 0;  // Current buffer write index
+bool loading = false;     // Indicates active message reception
+
+// -----------------------------------------------------------------------------
+// Serial receive handler
+// -----------------------------------------------------------------------------
 
 
+/*
+ * checkSerialCommand()
+ *
+ * Reads and processes incoming serial data.
+ * Supports:
+ *  - Single-character command inputs
+ *  - Framed numeric messages (load value)
+ *
+ * Must be called periodically by the main scheduler.
+ */
 void checkSerialCommand()
 {
     while (Serial.available())
     {
         char c = Serial.read();
-
+        
+        // Start framed message reception
         if (!loading && c == loadPrefix)
         {
             loading = true;
@@ -75,10 +138,10 @@ void checkSerialCommand()
             continue;
         }
 
-        // If we are currently loading a message
+        // Process framed numeric message
         if (loading)
         {
-            // Check postfix (end of message)
+            // End-of-message detected
             if (c == postfix2)
             {
                 serialBuffer[bufferIndex] = '\0'; // null-terminate
@@ -100,7 +163,8 @@ void checkSerialCommand()
                 bufferIndex = 0;
             }
         }
-        // Debounce
+
+        // Debounced single-character command handling
         if (millis() - lastCommandTime > debounceDelay)
         {
             switch (c)
@@ -108,48 +172,72 @@ void checkSerialCommand()
                 case startReamingPrefix:
                     setActiveSequence(SEQ_REAM);
                     break;
+
                 case zeroPrefix:
                     setActiveSequence(SEQ_ZERO);
                     break;
+
                 case deafultReamingSettingPrefix:
                     loadDefaultReamingSettings();
                     break;
+
                 case deafultDrillingSettingPrefix:
                     loadDefaultDrillingSettings();
                     break;
+
                 case increaseRPMPrefix:
                     increaseRPM();
                     break;
+
                 case decreaseRPMPrefix:
                     decreaseRPM();
                     break;
+
                 case increaseFeedRatePrefix:
                     increaseFeedRate();
                     break;
+
                 case decreaseFeedRatePrefix:
                     decreaseFeedRate();
                     break;
+
                 case increaseDepthOfCutPrefix:
                     increaseDepthOfCut();
                     break;
+
                 case decreaseDepthOfCutPrefix:
                     decreaseDepthOfCut();
                     break;
+
                 case increaseManualFeedRatePrefix:
                     increaseManualFeedRate();
                     break;
+
                 case decreaseManualFeedRatePrefix:
                     decreaseManualFeedRate();
                     break;
+
                 default:
                     break;
             }
+
+
             lastCommandTime = millis();
         }
     }
 }
 
 
+// -----------------------------------------------------------------------------
+// Serial transmit functions
+// -----------------------------------------------------------------------------
+
+/*
+ * sendAllSerial()
+ *
+ * Transmits all relevant system telemetry to the host.
+ * Intended for periodic execution.
+ */
 void sendAllSerial()
 {
     sendSerialMessage(startStoringPrefix, isReaming());
@@ -162,6 +250,11 @@ void sendAllSerial()
 }
 
 
+/*
+ * sendPosition()
+ *
+ * Periodically transmits the current position only.
+ */
 void sendPosistion()
 {
     if (millis() - sincelastposition >= timepositionpast)
@@ -171,6 +264,10 @@ void sendPosistion()
     }
 }
 
+
+// -----------------------------------------------------------------------------
+// Serial message helpers
+// -----------------------------------------------------------------------------
 
 void sendSerialMessage(String prefix, unsigned long value)
 {
@@ -204,6 +301,19 @@ void sendSerialMessage(String prefix, long int value)
 }
 
 
+// -----------------------------------------------------------------------------
+// Framed message processing
+// -----------------------------------------------------------------------------
+
+/*
+ * processMessage()
+ *
+ * Handles framed numeric input messages.
+ * Currently used to receive load values from the host.
+ *
+ * Parameters:
+ *  - msg : Null-terminated string containing numeric data
+ */
 void processMessage(char* msg)
 {
     // Convert string → float

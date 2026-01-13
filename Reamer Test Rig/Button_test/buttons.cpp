@@ -1,3 +1,19 @@
+
+/*
+ * buttons.cpp
+ *
+ * File Overview:
+ *  - Handles all physical button input using the Bounce2 debounce library.
+ *  - Translates button press and release events into high-level system actions.
+ *  - Provides manual motion control and sequence triggering via hardware inputs.
+ *
+ * Design Notes:
+ *  - Buttons are configured with internal pull-ups and active-low logic.
+ *  - Debouncing is handled entirely by the Bounce2 library.
+ *  - This module does not directly control hardware; it issues requests to
+ *    higher-level controllers.
+ */
+
 #include <Bounce2.h>
 #include "buttons.h"
 #include "ream.h"
@@ -16,6 +32,12 @@ Bounce btn[numberOfButtons];
 bool upPressed = false;
 bool downPressed = false;
 
+
+/*
+ * buttons_init()
+ *
+ * Configures button input pins and initializes debouncing.
+ */
 void buttons_init()
 {
   for (int i = 0; i < numberOfButtons; i++) 
@@ -27,41 +49,54 @@ void buttons_init()
 }
 
 
-// Checks physical buttons state
+/*
+ * checkButtons()
+ *
+ * Checks the current state of all buttons and triggers actions accordingly.
+ * This function should be called regularly in the main loop.
+ */
 void checkButtons()
 {
   // Update all button states
   for (int i = 0; i < numberOfButtons; i++) {
-    btn[i].update();
+    btn[i].update();  // Update debounce logic for this button
   }
 
-  if(btn[BTN_DOWN].fell()) // Down
+
+  // --- Manual Down Movement ---
+  if(btn[BTN_DOWN].fell())  // Button pressed (active-low)
   {
-    requestManualMove(DOWN);
+    requestManualMove(DOWN);  // Request manual downward motion
   }
-  else if (btn[BTN_DOWN].rose())
+  else if (btn[BTN_DOWN].rose())  // Button released
   {
-    requestManualMove(STOP);
+    requestManualMove(STOP);  // Stop motion when button released
   }
 
-  if(btn[BTN_UP].fell()) // UP
+
+  // --- Manual Up Movement ---
+  if(btn[BTN_UP].fell()) // Button pressed
   {
-    requestManualMove(UP);
+    requestManualMove(UP);  // Request manual upward motion
 
   }
-  else if (btn[BTN_UP].rose())
+  else if (btn[BTN_UP].rose()) // Button released
   {
-    requestManualMove(STOP);
+    requestManualMove(STOP);  // Stop motion when button released
   }
 
-  if(btn[BTN_ZERO].fell()) // ZERO
+
+  // --- Zero Sequence Trigger --
+  if(btn[BTN_ZERO].fell()) // Button pressed
   {
-    setActiveSequence(SEQ_ZERO);
+    setActiveSequence(SEQ_ZERO);  // Trigger the zeroing sequence
   }
 
-  if(btn[BTN_REAM].fell()) // REAM
+
+  // --- Ream Sequence Trigger ---
+  if(btn[BTN_REAM].fell()) // Button pressed
   {
-    setActiveSequence(SEQ_REAM);
+    setActiveSequence(SEQ_REAM);  // Trigger the ream sequence
   }
 
 }

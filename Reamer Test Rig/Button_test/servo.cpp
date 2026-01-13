@@ -1,4 +1,5 @@
 
+/*
 #include "servo.h"
 
 #define PWM_PIN_ON 1
@@ -24,7 +25,14 @@ void servoOff()
 }
 
 
+void servoOn()
+{
+  setVoltage(PWM_PIN_ON, 5);
+}
+
+
 void setServoRPM(float rpm)
 {
   
 }
+*/

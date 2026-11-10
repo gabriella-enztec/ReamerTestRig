@@ -22,6 +22,8 @@
 #include "settings.h"
 #include "sequenceManager.h"
 
+#include <Arduino.h>
+
 // -----------------------------------------------------------------------------
 // Serial configuration and buffers
 // -----------------------------------------------------------------------------
@@ -52,6 +54,7 @@ const String feedRatePrefix        = "\$f";   // Feed rate
 const String depthOfCutPrefix      = "\$d";   // Depth of cut
 const String LoadPrefix            = "\$l";   // Load value
 const String rapidSpeedPrefix      = "\$o";   // Manual feed rate
+const String settingsNotifPrefix   = "\$q";   // Settings change indicator
 
 
 // -----------------------------------------------------------------------------
@@ -247,6 +250,7 @@ void sendAllSerial()
     sendSerialMessage(depthOfCutPrefix, getDepthOfCut());
     sendSerialMessage(LoadPrefix, getLoad());
     sendSerialMessage(rapidSpeedPrefix, getManualFeedRate());
+    sendSerialMessage(settingsNotifPrefix, 'A');
 }
 
 
@@ -294,6 +298,14 @@ void sendSerialMessage(String prefix, float value)
 
 
 void sendSerialMessage(String prefix, long int value)
+{
+  Serial.print(prefix);
+  Serial.print(value);   
+  Serial.print(postfix);
+}
+
+
+void sendSerialMessage(String prefix, const char* value)
 {
   Serial.print(prefix);
   Serial.print(value);   

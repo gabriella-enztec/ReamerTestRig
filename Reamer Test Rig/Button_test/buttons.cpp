@@ -67,6 +67,7 @@ void checkButtons()
   if(btn[BTN_DOWN].fell())  // Button pressed (active-low)
   {
     requestManualMove(DOWN);  // Request manual downward motion
+    //Serial.println("DOWN");
   }
   else if (btn[BTN_DOWN].rose())  // Button released
   {
@@ -78,6 +79,7 @@ void checkButtons()
   if(btn[BTN_UP].fell()) // Button pressed
   {
     requestManualMove(UP);  // Request manual upward motion
+    //Serial.println("UP");
 
   }
   else if (btn[BTN_UP].rose()) // Button released

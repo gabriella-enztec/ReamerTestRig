@@ -23,7 +23,7 @@
 
 // Stepper motor control pins
 #define DirPin  12    // Direction control pin
-#define StepPin 10    // Step pulse pin
+#define StepPin 10    // Step pulse pin PWM!!!!!
 
 // Load flag for zeroing
 float zeroingLoad = 10;

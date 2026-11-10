@@ -20,8 +20,8 @@
 #include "settings.h"
 
 // ----------- CONFIGURABLE LIMITS -----------
-const int RPM_MIN = 0;
-const int RPM_MAX = 1000;
+const float RPM_MIN = 0;
+const float RPM_MAX = 1000;
 const float FEED_MIN = 0;
 const float FEED_MAX = 100;
 const float DOC_MIN = 0;
@@ -29,13 +29,13 @@ const float DOC_MAX = 100;
 const float RAPID_SPEED_MIN = 0;
 const float RAPID_SPEED_MAX = 20;
 
-const int RPM_iter = 10;
+const float RPM_iter = 10;
 const float FEED_iter = 0.1;
 const float DOC_iter = 0.5;
 const float RAPID_SPEED_iter = 0.5; 
 
 // ----------- DEAFULT REAMING SETTINGS -----------
-const int RPM_REAMING_DEAFULT = 270;
+const float RPM_REAMING_DEAFULT = 270;
 const float FEED_REAMING_DEAFULT = 0.5;
 const float DOC_REAMING_DEAFULT = 4;
 
@@ -45,7 +45,7 @@ const float FEED_DRILL_DEAFULT = 3;
 const float DOC_DRILL_DEAFULT = 65;
 
 // ----------- CURRENT SETTINGS -----------
-int RPM = 270;
+float RPM = 500;
 float FEED = 0.5;
 float DOC = 4;
 
@@ -250,7 +250,7 @@ void loadDefaultDrillingSettings() {
  *
  * Returns the current RPM value.
  */
-int getRPM()
+float getRPM()
 {
   return RPM;
 }

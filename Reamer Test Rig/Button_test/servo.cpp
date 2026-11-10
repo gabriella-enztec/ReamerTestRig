@@ -1,38 +1,45 @@
+#include "settings.h"
 
-/*
-#include "servo.h"
+#define SERVO_SWITCH_PIN 3 // PWM
+#define OP_AMP_PIN 9 // PWM
 
-#define PWM_PIN_ON 1
-#define PWM_PIN_RPM 2
+#include <Arduino.h>
+
+
+#define MAX_RPM 1000.0
+#define MIN_PWM_VOLTAGE 2.12
+
+
+
+void OnServo(bool on)
+{
+  digitalWrite(SERVO_SWITCH_PIN, on ? HIGH : LOW);
+}
 
 
 void servo_init()
 {
-  pinMode(PWM_PIN_ON, OUTPUT);
-  pinMode(PWM_PIN_RPM, OUTPUT);
+  pinMode(SERVO_SWITCH_PIN, OUTPUT);
+  pinMode(OP_AMP_PIN, OUTPUT);
+
+  OnServo(false);
 }
 
-void setVoltage(int pin, float volts)
+
+uint8_t rpmToPWM(float rpm)
 {
-  volts = constrain(volts, 0.0, 5.0);
-  int pwm = (volts / 5.0) * 255;
-  analogWrite(pin, pwm);
+    if (rpm < 0) rpm = 0;
+    if (rpm > MAX_RPM) rpm = MAX_RPM;
+
+    float voltage = MIN_PWM_VOLTAGE * (1.0 - (rpm / MAX_RPM));
+    return (uint8_t)((voltage / 5.0) * 255.0);
 }
 
-void servoOff()
+
+void setServoSpeed(float rpm)
 {
-  setVoltage(PWM_PIN_ON, 0);
+  analogWrite(OP_AMP_PIN, rpmToPWM(rpm));
 }
 
 
-void servoOn()
-{
-  setVoltage(PWM_PIN_ON, 5);
-}
 
-
-void setServoRPM(float rpm)
-{
-  
-}
-*/

@@ -25,13 +25,17 @@
 #include "sequenceManager.h"
 #include "comms.h"
 #include "settings.h"
+#include "servo.h"
 
 
 // Clearance distance for safe positioning (mm)
 #define CLEARANCE 10
+#define SERVO_WARM_UP_PERIOD 4000 // ms
 
 // Initial clearance position before reaming (mm)
 const float STARTINGCLEARANCE = -2.00;
+
+long servoOn_starting_time = 0;
 
 
 /*
@@ -42,6 +46,7 @@ const float STARTINGCLEARANCE = -2.00;
 enum ReamSteps
 {
   POSITION,   // Move to starting clearance position
+  SERVO_ON,   // Turns on Servo
   REAM,       // Perform reaming operation
   EXTRACT,    // Retract tool after reaming
   NOPE        // Idle / inactive state
@@ -64,6 +69,7 @@ void reamReset()
   current_step = POSITION;
   previous_step = NOPE;
   ream_finished = false;
+  OnServo(false);
 }
 
 
@@ -88,8 +94,23 @@ void reamSequence()
       }
       else if (positioningFinished())
       {
-        current_step = REAM;
+        current_step = SERVO_ON;
         return;
+      }
+      break;
+    
+    case SERVO_ON:
+      // Turns on servo and waits for it to get to speed
+      if(previous_step != SERVO_ON)
+      {
+        OnServo(true);
+        setServoSpeed(getRPM());
+        previous_step = SERVO_ON;
+        servoOn_starting_time = millis();
+      }
+      else if (millis() - servoOn_starting_time >= SERVO_WARM_UP_PERIOD)
+      {
+        current_step = REAM;
       }
       break;
     
@@ -160,7 +181,7 @@ bool reamFinished()
  */
 int isReaming()
 {
-  if (current_step == REAM)
+  if (current_step == REAM || current_step == EXTRACT)
   {
     return 1;
   }

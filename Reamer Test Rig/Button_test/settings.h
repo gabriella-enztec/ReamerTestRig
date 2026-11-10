@@ -26,7 +26,7 @@ void loadDefaultReamingSettings();
 void loadDefaultDrillingSettings();
 
 // Get functions
-int getRPM();
+float getRPM();
 float getFeedRate();
 float getDepthOfCut();
 float getLoad();

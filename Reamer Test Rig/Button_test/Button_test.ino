@@ -1,3 +1,4 @@
+
 /*
  * main.cpp
  *
@@ -16,6 +17,7 @@
 #include "stepper_movement.h"
 #include "comms.h"
 #include "settings.h"
+#include "servo.h"
 
 // Task execution periods (milliseconds)
 #define SENDMESSAGE_PERIOD          50   // Periodic telemetry output to DEWESoft
@@ -51,6 +53,7 @@ void setup()
   stepper_movement_init();
   serial_init();
   initSettings();
+  servo_init();
 }
 
 

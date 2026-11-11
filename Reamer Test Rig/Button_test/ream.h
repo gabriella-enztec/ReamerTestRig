@@ -1,7 +1,8 @@
 #ifndef REAM_H_
 #define READ_H_
 
-void reamCycle();
-void drillCycle();
+void reamSequence();
+bool reamFinished();
+int isReaming();
 
 #endif

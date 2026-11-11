@@ -3,14 +3,23 @@
 #define STEPPER_MOVEMENT_H_
 
 #include <AccelStepper.h>
+#include "motion_controller.h"
 
-void move(int target_position, float speed);
+void move(float target_position, float speed);
 void manualPositioning(bool upP, bool downP);
+void manualPositioningWSpeed(bool upP, bool downP, float speed);
 void stepper_movement_init();
 void zero();
 
-// Movement Speed Settings
-#define RAPIDSPEED 5 // mm/s
-#define POSITIONSPEED 2 // mm/s
+long getStepperPosition();
+float getStepperPositionmm();
+bool getMotionComplete();
+
+void runStepper();
+
+void directionalMotion(Direction direction);
+void positionalMotion();
+void idle();
+void zero();
 
 #endif

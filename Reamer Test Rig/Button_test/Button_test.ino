@@ -1,8 +1,8 @@
 
-#include "HeaderFiles/buttons.h"
-#include "HeaderFiles/stepper_movement.h"
-#include "HeaderFiles/comms.h"
-#include "HeaderFiles/ream.h"
+#include "buttons.h"
+#include "stepper_movement.h"
+#include "comms.h"
+#include "ream.h"
 
 #define SENDMESSAGE_PERIOD 25 //ms
 

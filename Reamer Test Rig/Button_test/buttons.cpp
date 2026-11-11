@@ -1,7 +1,7 @@
 #include <Bounce2.h>
-#include "HeaderFiles/buttons.h"
-#include "HeaderFiles/ream.h"
-#include "HeaderFiles/stepper_movement.h"
+#include "buttons.h"
+#include "ream.h"
+#include "stepper_movement.h"
 
 // Button configuration - now defined here (not in header)
 const int btnPins[] = {DOWN_BUTTON, UP_BUTTON, ZERO_BUTTON, REAM_BUTTON};

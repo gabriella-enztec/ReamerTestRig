@@ -1,5 +1,5 @@
 
-#include "HeaderFiles/stepper_movement.h"
+#include "stepper_movement.h"
 
 // Stepper Motor Pins
 #define DirPin 12       // Pin sets direction of rotation

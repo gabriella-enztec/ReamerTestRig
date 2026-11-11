@@ -1,7 +1,7 @@
 
-#include "HeaderFiles/comms.h"
-#include "HeaderFiles/ream.h"
-#include "HeaderFiles/stepper_movement.h"
+#include "comms.h"
+#include "ream.h"
+#include "stepper_movement.h"
 
 // Serial communication settings
 #define INPUT_BUFFER_LEN 64

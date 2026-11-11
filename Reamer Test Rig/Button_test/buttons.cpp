@@ -40,6 +40,7 @@ bool downPressed = false;
  */
 void buttons_init()
 {
+  // Set up for all the different buttons
   for (int i = 0; i < numberOfButtons; i++) 
   {
     pinMode(btnPins[i], INPUT_PULLUP);

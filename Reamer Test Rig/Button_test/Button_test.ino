@@ -68,6 +68,8 @@ void loop()
 {
   currenttime = millis();
 
+  // Add a function which runs stepper motor
+
    // Periodic telemetry transmission
   if (currenttime - sendmessage_previous_time >= SENDMESSAGE_PERIOD)
   {

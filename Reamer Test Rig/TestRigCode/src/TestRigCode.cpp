@@ -11,6 +11,7 @@
  *  - Each subsystem is responsible for maintaining its own internal state.
  */
 
+#include <Arduino.h>
 #include "HeaderFiles/buttons.h"
 #include "HeaderFiles/motion_controller.h"
 #include "HeaderFiles/sequenceManager.h"

@@ -20,13 +20,13 @@
  *  - updateSequences(): Executes the active sequence; should be called periodically.
  */
 
-#include "sequenceManager.h"
-#include "zero.h"
-#include "ream.h"
-#include "motion_controller.h"
-#include "settings.h"
-
 #include <Arduino.h>
+#include "HeaderFiles/sequenceManager.h"
+#include "HeaderFiles/zero.h"
+#include "HeaderFiles/ream.h"
+#include "HeaderFiles/motion_controller.h"
+#include "HeaderFiles/settings.h"
+
 
 // ----------- SEQUENCE STATE TRACKING -----------
 static SequenceID activeSequence = SEQ_NONE;    // Currently active sequence

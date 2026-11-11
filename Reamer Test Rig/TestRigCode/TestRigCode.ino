@@ -11,13 +11,13 @@
  *  - Each subsystem is responsible for maintaining its own internal state.
  */
 
-#include "buttons.h"
-#include "motion_controller.h"
-#include "sequenceManager.h"
-#include "stepper_movement.h"
-#include "comms.h"
-#include "settings.h"
-#include "servo.h"
+#include "HeaderFiles/buttons.h"
+#include "HeaderFiles/motion_controller.h"
+#include "HeaderFiles/sequenceManager.h"
+#include "HeaderFiles/stepper_movement.h"
+#include "HeaderFiles/comms.h"
+#include "HeaderFiles/settings.h"
+#include "HeaderFiles/servo.h"
 
 // Task execution periods (milliseconds)
 #define SENDMESSAGE_PERIOD          50   // Periodic telemetry output to DEWESoft

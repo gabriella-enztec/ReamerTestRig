@@ -15,13 +15,13 @@
  */
 
 #include <Bounce2.h>
-#include "buttons.h"
-#include "ream.h"
-#include "stepper_movement.h"
-#include "motion_controller.h"
-#include "comms.h"
-#include "settings.h"
-#include "sequenceManager.h"
+#include "HeaderFiles/buttons.h"
+#include "HeaderFiles/ream.h"
+#include "HeaderFiles/stepper_movement.h"
+#include "HeaderFiles/motion_controller.h"
+#include "HeaderFiles/comms.h"
+#include "HeaderFiles/settings.h"
+#include "HeaderFiles/sequenceManager.h"
 
 // Button configuration - now defined here (not in header)
 const int btnPins[] = {DOWN_BUTTON, UP_BUTTON, ZERO_BUTTON, REAM_BUTTON};

@@ -15,10 +15,10 @@
  *  - Positioning is performed in open-loop steps, assuming a calibrated system.
  */
 
-#include "stepper_movement.h"
-#include "motion_controller.h"
-#include "comms.h"
-#include "settings.h"
+#include "HeaderFiles/stepper_movement.h"
+#include "HeaderFiles/motion_controller.h"
+#include "HeaderFiles/comms.h"
+#include "HeaderFiles/settings.h"
 
 
 // Stepper motor control pins

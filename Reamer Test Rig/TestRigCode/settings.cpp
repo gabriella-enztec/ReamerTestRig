@@ -17,7 +17,7 @@
  *  - Separation of default presets and current settings allows easy switching between operations.
  */
 
-#include "settings.h"
+#include "HeaderFiles/settings.h"
 
 // ----------- CONFIGURABLE LIMITS -----------
 const float RPM_MIN = 0;

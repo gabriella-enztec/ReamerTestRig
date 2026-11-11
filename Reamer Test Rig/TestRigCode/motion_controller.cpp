@@ -19,11 +19,11 @@
 
 
 #include <Arduino.h>
-#include "motion_controller.h"
-#include "stepper_movement.h"
-#include "sequenceManager.h"
-#include "settings.h"
-#include "comms.h"
+#include "HeaderFiles/motion_controller.h"
+#include "HeaderFiles/stepper_movement.h"
+#include "HeaderFiles/sequenceManager.h"
+#include "HeaderFiles/settings.h"
+#include "HeaderFiles/comms.h"
 
 
 /*

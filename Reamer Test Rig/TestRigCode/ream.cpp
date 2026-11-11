@@ -20,12 +20,12 @@
  *  - The sequence self-resets on completion.
  */
 
-#include "stepper_movement.h"
-#include "motion_controller.h"
-#include "sequenceManager.h"
-#include "comms.h"
-#include "settings.h"
-#include "servo.h"
+#include "HeaderFiles/stepper_movement.h"
+#include "HeaderFiles/motion_controller.h"
+#include "HeaderFiles/sequenceManager.h"
+#include "HeaderFiles/comms.h"
+#include "HeaderFiles/settings.h"
+#include "HeaderFiles/servo.h"
 
 
 // Clearance distance for safe positioning (mm)

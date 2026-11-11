@@ -1,4 +1,4 @@
-#include "settings.h"
+#include "HeaderFiles/settings.h"
 
 #define SERVO_SWITCH_PIN 3 // PWM
 #define OP_AMP_PIN 9 // PWM

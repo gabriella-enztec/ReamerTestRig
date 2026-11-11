@@ -1,5 +1,5 @@
 #ifndef SERVO_H
-#define SERO_H
+#define SERVO_H
 
 void servo_init();
 void OnServo(bool on);

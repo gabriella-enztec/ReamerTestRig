@@ -25,10 +25,10 @@
  *  - zeroFinished(): Returns true if the zeroing sequence has finished since last check.
  */
  
-#include "zero.h"
-#include "settings.h"
-#include "sequenceManager.h"
-#include "stepper_movement.h"
+#include "HeaderFiles/zero.h"
+#include "HeaderFiles/settings.h"
+#include "HeaderFiles/sequenceManager.h"
+#include "HeaderFiles/stepper_movement.h"
 
 // Zeroing Sequence Steps
 enum ZeroSteps

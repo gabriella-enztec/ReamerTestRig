@@ -15,14 +15,13 @@
  *  - All communication is non-blocking and processed incrementally.
  */
 
-#include "comms.h"
-#include "buttons.h"
-#include "ream.h"
-#include "stepper_movement.h"
-#include "settings.h"
-#include "sequenceManager.h"
-
 #include <Arduino.h>
+#include "HeaderFiles/comms.h"
+#include "HeaderFiles/buttons.h"
+#include "HeaderFiles/ream.h"
+#include "HeaderFiles/stepper_movement.h"
+#include "HeaderFiles/settings.h"
+#include "HeaderFiles/sequenceManager.h"
 
 // -----------------------------------------------------------------------------
 // Serial configuration and buffers
